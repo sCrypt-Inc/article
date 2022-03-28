@@ -6,7 +6,7 @@
 
 在之前版本的IDE，当你在调试sCrypt 合约时， 如果调试器是停在被导入的文件中，这个时候在 **REPL** 中执行表达式，会提示以下错误。
 
-![](unsupport_repl.gif)
+![unsupport_repl](./unsupport_repl.gif)
 
 `util.scrypt` 是被导入的文件，当调试器停在这里时，在 **REPL** 中无法执行表达式。
 
