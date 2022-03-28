@@ -1,6 +1,6 @@
 # sCrypt 新功能介绍 (v1.9.0)
 
-今天我们发布了 sCrypt IDE 的新版本 [v1.9.0](https://marketplace.visualstudio.com/items?itemName=bsv-scrypt.sCrypt)。 新版本支持在被导入的文件中执行 **REPL**， 同时带来了更加强大的 [内联汇编](https://scryptdoc.readthedocs.io/zh_CN/latest/asm.html) 语法。
+今天我们发布了 sCrypt IDE 的新版本 [v1.9.0](https://marketplace.visualstudio.com/items?itemName=bsv-scrypt.sCrypt)。 新版本支持在被导入的文件中执行 [REPL](https://scrypt-ide.readthedocs.io/zh_CN/latest/debugger.html#repl)， 同时带来了更加强大的 [内联汇编](https://scryptdoc.readthedocs.io/zh_CN/latest/asm.html) 语法。
 
 ## 在被导入的文件中执行 **REPL**
 
