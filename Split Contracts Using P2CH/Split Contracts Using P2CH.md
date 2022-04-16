@@ -68,7 +68,7 @@ contract IncrementLocktimeSplit {
 
 数组 `calleeContractHashes` 中的每个元素都是合约 `PartialSha256` 的哈希，具有不同的 `MAX_CHUNKS`。因此，该数组包含主合约支持的所有 `MAX_CHUNKS`。
 
-合约 `PartialSha256` 计算 `partialSha256()`（与原始合约 `IncrementLocktime` 相同的函数）并将函数调用参数和结果值存储在输出中，正如我们在[合约间调用](https://xiaohuiliu.medium.com/inter-contract-call-on-bitcoin-f51869c08be)中所做的那样，它可以被合约 `IncrementLocktimeSplit` 访问。
+合约 `PartialSha256` 计算 `partialSha256()`（与原始合约 `IncrementLocktime` 相同的函数）并将函数调用参数和结果值存储在输出中，正如我们在[合约间调用](https://blog.csdn.net/freedomhero/article/details/123582716)中所做的那样，它可以被合约 `IncrementLocktimeSplit` 访问。
 
 ```js
 
@@ -142,7 +142,7 @@ contract Main {
 
 ## 讨论
 
-我们已经说明了如何通过将大合约拆分为多个较小的合约来减少大合约的规模。示例合约是一次性且无状态的。对于连续调用并累积节省的有状态合约，减少将更为显着。
+我们已经说明了如何通过将大合约拆分为多个较小的合约来减少大合约的大小。示例合约是一次性且无状态的。对于连续调用的有状态合约，减少的合约大小将更为显着，并且节省是随调用累积的。
 
 优化使用许多公共函数的合约的另一种方法是使用[Merklized 抽象语法树压缩智能合约](https://blog.csdn.net/freedomhero/article/details/119301247)。
 
