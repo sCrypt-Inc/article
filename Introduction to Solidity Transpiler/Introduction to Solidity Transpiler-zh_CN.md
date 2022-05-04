@@ -116,7 +116,7 @@ Solidiy 中的 `mapping` 类型也是比较常见的一种数据结构，它会�
 
 2. 验证这个 `val` 是确实是 `key` 所对应的值；
  
-3. 将访问表达式替换为传入的 `val` 参数表达式; 
+3. 将访问表达式替换为传入的 `val` 参数; 
  
 4. 如果是写操作，最后还需要插入对 `HashedMap` 的更新；
  
@@ -191,9 +191,9 @@ x = val;
 ### 运算符
 
  
-Solidiy 的大部分操作符都可以直接转译到 sCrypt 相同的运算符上，比如常见的 `+`， `-`， `*`， `/` 等等。但也有不支持转译的操作符，比如幂操作符 `**`。
+Solidity 的大部分操作符都可以直接转译到 sCrypt 相同的运算符上，比如常见的 `+`， `-`， `*`， `/` 等等。但也有不支持转译的操作符，比如幂操作符 `**`。
  
-除此之外，在转译位运算的操作符时也要**非常小心**，因为 BSV 上的整数采用的是小端编码方式，且负数值编码也不是 Solidity 的二进制补码形式。所以虽然转译后的表达式形式一致，但结果可能并不相同。
+除此之外，在转译位运算的操作符时也要**非常小心**，因为 BSV 上的整数采用的是小端编码方式，且负数值编码也不是 Solidity 的二进制补码形式。所以虽然转译后的表达式形式一致，但执行结果可能并不相同。
 
 ### 条件语句
  
@@ -507,7 +507,7 @@ PubKeyHash msgSender = hash160(pubKey);
 require(checkSig(sig, pubKey));
 ```
  
-对于 `msg.value` 来说，我们在公共方法中增加一个 `int` 类型参数 `msgValue`，要求调用者将其值主动作为参数传入。与此同时，通过[PUSH_TX](https://blog.csdn.net/freedomhero/article/details/107306604)技术，可以知道合约原来锁定的余额。合约解锁后新的余额应为： `SigHash.value(txPreimage) + msgValue`。最后在函数内部使用前面提到的 `propagateState` 方法验证新的合约 UTXO 中的余额确实包含了这个值带来的增量。
+对于 `msg.value` 来说，我们在公共方法中增加一个 `int` 类型参数 `msgValue`，要求调用者将其值主动作为参数传入。与此同时，通过[OP_PUSH_TX](https://blog.csdn.net/freedomhero/article/details/107306604)技术，可以知道合约原来锁定的余额。合约解锁后新的余额应为： `SigHash.value(txPreimage) + msgValue`。最后在函数内部使用前面提到的 `propagateState` 方法验证新的合约 UTXO 中的余额确实包含了这个值带来的增量。
 
 
 ```js
@@ -566,7 +566,7 @@ public function xxx(... SigHashPreimage txPreimage) {
  
 ## 总结
  
-诚如一开始我们提到的，这个转译器的主要作用是帮助开发者从 Solidity 合约快速过度到 sCrypt 合约，以便能够利用 BSV 区块链更加高效低成本的网络构建 Web3 应用，希望能够对大家有所帮助，如果有任何疑问或建议，请加入我们的 [sCrypt slack 讨论组](https://join.slack.com/t/scryptworkspace/shared_invite/enQtNzQ1OTMyNDk1ODU3LTJmYjE5MGNmNDZhYmYxZWM4ZGY2MTczM2NiNTIxYmFhNTVjNjE5MGYwY2UwNDYxMTQyNGU2NmFkNTY5MmI1MWM) 或者 [github 仓库](https://github.com/sCrypt-Inc/sol2scrypt)。
+诚如一开始我们提到的，这个转译器的主要作用是帮助开发者从 Solidity 合约快速过度到 sCrypt 合约，以便能够利用 BSV 区块链更加高效低成本的网络构建 Web3 应用。希望能够对大家有所帮助。如果有任何疑问或建议，请加入我们的 [sCrypt slack 讨论组](https://join.slack.com/t/scryptworkspace/shared_invite/enQtNzQ1OTMyNDk1ODU3LTJmYjE5MGNmNDZhYmYxZWM4ZGY2MTczM2NiNTIxYmFhNTVjNjE5MGYwY2UwNDYxMTQyNGU2NmFkNTY5MmI1MWM) 或者 [github 仓库](https://github.com/sCrypt-Inc/sol2scrypt)。
 
 
 
