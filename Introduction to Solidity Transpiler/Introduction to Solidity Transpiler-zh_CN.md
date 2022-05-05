@@ -1,14 +1,14 @@
-# Solidity 转译器简介
+# Solidity -> sCrypt 转译器简介
 
-sol2scrypt 是一个转译器程序。它可以将 Solidity 合约代码转换为等价的 sCrypt 合约代码，方便开发者进行快速学习或代码迁移。
+`sol2scrypt` 是一个转译器程序。它可以将 Solidity 合约代码转换为等价的 sCrypt 合约代码，方便开发者进行快速学习或代码迁移。
 
-在介绍转译器的原理之前，我们再来回顾一下以太坊的账户模型和 BSV 的 UTXO 模型的主要差异：
+在介绍转译器的原理之前，我们再来回顾一下以太坊的账户模型和 Bitcoin 的 UTXO 模型的主要差异：
 
-- 以太坊应用的账户模型实际上为每个用户或合约地址都保存了一个独立的全局状态，并通过合约调用的方式触发其状态变更。这样做的好处是可以使用全局唯一的地址来进行快速寻址和消息传递，也更贴近传统数据库应用开发者的思维模型，但其最大缺点是性能问题，只能串行处理。
+- 以太坊应用的账户模型实际上为每个合约都保存了一个单独的状态，并通过合约调用的方式触发其状态变更。这样做的好处是可以使用全局唯一的地址来进行快速寻址和消息传递，也更贴近传统数据库应用开发者的思维模型，但其最大缺点是性能问题，只能串行处理。
 
-- BSV 使用的 UTXO 模型实际上为每个用户或合约地址维护了一个 UTXO 的集合，使用这个集合的聚合信息来表示用户或合约的状态。这样的好处是可以让事务处理尽可能独立，最大化并行处理能力，但无法使用单一地址进行寻址和消息传递，使得编写某些合约难度更高。
+- Bitcoin 使用的 UTXO 模型实际上为每个用户或合约地址维护了一个 UTXO 的集合，使用这个集合的聚合信息来表示用户或合约的状态。这样的好处是可以让事务处理尽可能独立，最大化并行处理能力，但无法使用单一地址进行寻址和消息传递，使得编写某些合约难度更高。
 
-sol2scrypt 转译器开发的初衷就是实现从 Solidity 智能合约到 sCrypt 智能合约的自动转换工具。它为那些不太熟悉基于 UTXO 模型智能合约的开发者们提供了一个很好的起点。一方面它可以让开发者直观的看到同样的业务逻辑在两种语言的不同实现，另一方面也可以让他们免于从零开始编写等价的 sCrypt 合约。当然因为受限于前面提到的账户模型与 UTXO 模型的根本性差异，这个工具也会有一定的局限性，无法实现任意类型 Solidity 合约的100%全自动转换。
+sol2scrypt 转译器开发的初衷就是实现从 Solidity 智能合约到 sCrypt 智能合约的自动转换工具。它为那些不太熟悉基于 UTXO 模型智能合约的开发者们提供了一个很好的起点。一方面它可以让开发者直观的看到同样的业务逻辑在两种语言的不同实现，另一方面也可以让他们免于从零开始编写等价的 sCrypt 合约。
 
 ## 转译原理
 
@@ -18,18 +18,18 @@ sol2scrypt 转译器开发的初衷就是实现从 Solidity 智能合约到 sCry
 首先使用一个单一 UTXO 来映射 EVM 中的某个合约实例的初始状态；
  
 ### 合约调用
-利用 [UTXO 有状态合约的工作原理](https://blog.csdn.net/freedomhero/article/details/107307306) 来映射 EVM 上合约的那些会改变合约内部状态方法调用。每当需要变更合约内部状态时，产生一个新的交易，它会花费掉合约当前的 UTXO 并产生一个带有新状态的 UTXO，以此类推。
+利用 [UTXO 有状态合约的工作原理](https://blog.csdn.net/freedomhero/article/details/107307306) 来映射那些会改变合约内部状态方法调用。每当需要变更合约内部状态时，产生一个新的交易。它会花费掉合约当前的 UTXO 并产生一个带有新状态的 UTXO，以此类推。
 
 ### 合约销毁
 
-以太坊的合约实例销毁需要调用 selfdestruct 方法使其内部状态标记为失效，而在 BSV 上我们只需要将合约当前合约 UTXO 花费掉并不再产生新的合约 UTXO 即可。
+以太坊的合约实例销毁需要调用 `selfdestruct` 方法使其内部状态标记为失效，而在 Bitcoin 上我们只需要将当前合约 UTXO 花费掉并不再产生新的合约 UTXO 即可。
 
 以上是整个转译器的基础原理，需要说明的是，这里只是应用了一种最简单直接的转译思路，我们仅仅使用了一个单一的 UTXO 来映射单一合约。实际上，针对特定的 Solidity 合约来说，可能存在其他更加复杂但能够提高并行性能的转译方式，只不过这可能需要更多地开发者人为设计。
 
 ## 语法转译
 
  
-下面我们来看看一些具体的语法转译细节。
+下面我们来看看具体的语法转译细节。
  
 
 ### 合约状态变量
@@ -97,22 +97,22 @@ Solidiy 的数组类型也是直接转译为 sCrypt 的数组，但这里有个�
  
 #### 4. Mapping 类型
  
-Solidiy 中的 `mapping` 类型也是比较常见的一种数据结构，它会被转译为 sCrypt 的 `HashedMap` 数据类型，但这个转译过程比较特殊。
+Solidiy 中的 `mapping` 类型也是常见的一种数据结构，它会被转译为 sCrypt 的 `HashedMap` 数据类型，但这个转译过程比较特殊。
 
 首先，Solidiy 的 `mapping` 就是一种常见的哈希表实现，它支持使用基本类型最为键，任意类型作为值，并且支持增删改查等操作。但是 sCrypt 中的 `HashedMap` 却不是这种普通的哈希表实现，它有几个非常不一样的特点：
  
-1. `HashedMap` 中保存的并不是 `mapping` 数据结构中原始的 `key` 和 `value` 值，而是它们各自的哈希值，可以把它理解为是整个 `mapping` 结构的哈希结果。或者换一种说法，它是确保键值对存在于 `mapping` 中的一个凭证。
+1. `HashedMap` 中保存的并不是 `mapping` 数据结构中原始的key和value值，而是它们各自的哈希值。可以把它理解为是整个 `mapping` 结构的哈希结果。或者换一种说法，它是确保键值对存在于 `mapping` 中的一个凭证。
  
-2. 当程序需要使用其中的某个键值对时，首先需要从外部参数传入具体的值，然后利用 `HashedMap` 来对其进行验证。如果验证通过说明传入参数是合法的，那么在下面的程序中就可以放心使用它们进行运算；反之则说明这是无效的键值对，程序不应该继续往下执行。
+2. 当程序需要使用其中的某个键值对时，首先需要将原始值从外部作为参数传入，然后利用 `HashedMap` 来对其进行验证。如果验证通过说明传入参数是合法的，那么在下面的程序中就可以放心使用它们进行运算；反之则说明这是无效的键值对，程序不应该使用它们。
 
-**`HashedMap` 使用这种设计的主要原因是考虑到脚本体积以及循环次数必须为常数的限制，更多说明还可以参考[这篇文章](https://blog.csdn.net/freedomhero/article/details/121395939)**。
+**`HashedMap` 使用这种设计的主要原因是考虑到脚本体积以及不支持无上限循环的限制，更多说明还可以参考[这篇文章](https://blog.csdn.net/freedomhero/article/details/121395939)**。
 
  
-这种基于验证的模式也是 BSV 区块链智能合约不同于其他智能合约的一个显著特点。
+这种基于验证的模式是 Bitcoin 区块链智能合约不同于其他链智能合约的一个显著特点。
  
 假设我们已有一个实例 `mapping(uint256 => uint256) m;`，针对该实例的读写访问将主要进行如下变换：
  
-1. 在函数的输入参数中插入真正的 `val` 值和一个 `index` 值 （这个为 `key` 在所有键值排序后的索引值）；
+1. 在函数的输入参数中插入原始的 `val` 值和一个 `idx` 值 （这个为 `key` 在所有键值哈希排序后的索引值）；
 
 2. 验证这个 `val` 是确实是 `key` 所对应的值；
  
@@ -139,7 +139,7 @@ function xxx(...) {
 @state
 HashedMap<int, int> m;
 
-function xxx(... int val, int idx) { // parameters injection
+function xxx(..., int val, int idx) { // parameters injection
     ...
     require((!this.m.has(key, idx) && val == 0) || this.m.canGet(key, val, idx));  // validation
     a = val;   // for read case, replace `m[key]` with 'val'
@@ -191,9 +191,9 @@ x = val;
 ### 运算符
 
  
-Solidity 的大部分操作符都可以直接转译到 sCrypt 相同的运算符上，比如常见的 `+`， `-`， `*`， `/` 等等。但也有不支持转译的操作符，比如幂操作符 `**`。
+Solidity 的操作符都可以直接转译到 sCrypt 相同的运算符上，比如常见的 `+`， `-`， `*`， `/` 等等。只有一个例外，不支持转译幂操作符 `**`。
  
-除此之外，在转译位运算的操作符时也要**非常小心**，因为 BSV 上的整数采用的是小端编码方式，且负数值编码也不是 Solidity 的二进制补码形式。所以虽然转译后的表达式形式一致，但执行结果可能并不相同。
+除此之外，在转译位运算的操作符时也要**非常小心**，因为 sCrypt 里的整数采用的是小端编码方式，且负数值编码也不是 Solidity 的二进制补码形式。所以虽然转译后的表达式形式一致，但执行结果可能并不相同。
 
 ### 条件语句
  
@@ -201,7 +201,7 @@ sCrypt 同样支持 `if` / `else` 语句， 直接转译即可。
  
 ### 循环语句
  
-Solidity 中支持 3 种常见的循环语句，即 `for` / `while` / `do ... while`，其底层都是通过跳转指令来实现的。但是，由于 BVM 虚拟机的底层操作码中没有跳转指令，故并不能直接实现上述循环语句。而 sCrypt 通过引入 `loop` 语句，可以实现常数次的循环语句。当然这也要求循环次数是一个编译时常量。
+Solidity 中支持 3 种常见的循环语句，即 `for` / `while` / `do ... while`，其底层都是通过跳转指令来实现的。但是，由于 Bitcoin 虚拟机(BVM)的底层操作码中没有跳转指令，故并不能直接实现上述循环语句。而 sCrypt 通过引入 `loop` 语句，可以实现常数次的循环语句。当然这也要求循环次数是一个编译时常量。
 
 所以在转译 Solidiy 的循环语句时，我们统一使用 `loop` 语句进行映射。由于具体的循环次数是和程序逻辑紧密相关的，转译器无法自动给定一个合理的取值，所以这里使用占位符变量比如 `__LoopCount__0` 来替代。这就要求开发者手动修改转译后的 sCrypt 代码，将其替换为合理的取值，否则转译后的 sCrypt 合约无法通过编译。循环次数一般可以根据gas limit反推出来。
 
@@ -211,7 +211,7 @@ Solidity 中支持 3 种常见的循环语句，即 `for` / `while` / `do ... wh
  
 ```solidity
 uint sum = 0;
-for(uint i=0; i<n2; i++) {
+for(uint i=0; i<n; i++) {
    sum += i;
 }
 ```
@@ -283,7 +283,7 @@ loop (__LoopCount__0) {
 
 #### `break` 语句
  
-正如我们刚才提到的，sCrypt 中无法直接跳转，所以第一直觉上我们是无法转译循环中常见的 `break` 或 `continue` 语句。但是实际上，我们还是可以结合条件语句 `if`/`else` 来实现这两个逻辑，只不过需要加入一个布尔类型的 `FLAG`。
+正如我们刚才提到的，sCrypt 中无法直接跳转，所以第一直觉上我们是无法转译循环中常见的 `break` 或 `continue` 语句。但是实际上，我们还是可以结合条件语句 `if`/`else` 来实现这两个逻辑，只不过需要加入一个布尔类型的 flag。
  
 比如，针对以下 Solidity 代码：
  
@@ -374,34 +374,20 @@ loop (__LoopCount__0) {
 
 
 ```solidity
-function set(uint x) external {
-    storedData = x;
-}
-
-function get() internal view returns (uint) {
-    return storedData;
+function f2(uint a, uint b) internal pure returns (uint) {
+    return a + b;
 }
 ```
+
 其转译结果为：
+
 ```js
-public function set(int x, SigHashPreimage txPreimage) {
-    this.storedData = x;
-    require(this.propagateState(txPreimage, SigHash.value(txPreimage)));
-}
-
-function get() : int {
-    return this.storedData;
-}
-
-function propagateState(SigHashPreimage txPreimage, int value) : bool {
-    require(Tx.checkPreimage(txPreimage));
-    bytes outputScript = this.getStateScript();
-    bytes output = Utils.buildOutput(outputScript, value);
-    return hash256(output) == SigHash.hashOutputs(txPreimage);
+static function f2(int a, int b) : int {
+    return a + b;
 }
 ```
 
-#### `private` / `internal` 函数中的 `return` 语句
+##### `private` / `internal` 函数中的 `return` 语句
 
 **这里要注意的是：对于 `private` / `internal` 函数中的 `return` 语句，可能需要进行特殊处理。** 具体来说：
  
@@ -425,7 +411,7 @@ function propagateState(SigHashPreimage txPreimage, int value) : bool {
 
 2. **中途返回**
  
-前面提到过 BVM 底层是没有跳转指令的，所以 sCrypt 也不支持在函数中途进行返回。如果 Solidity 代码中出现了这种情况，就需要进行特殊处理。当然原理也很简单，类似之前 `break` / `continue` 的处理方法，增加 FLAG 配合 `if` / `else` 进行等价变换。比如针对 Solidity 代码：
+前面提到过 BVM 底层是没有跳转指令的，所以 sCrypt 也不支持在函数中途进行返回。如果 Solidity 代码中出现了这种情况，就需要进行特殊处理。当然原理也很简单，类似之前 `break` / `continue` 的处理方法，增加 boolean flag 配合 `if` / `else` 进行等价变换。比如针对 Solidity 代码：
  
 ```solidity
 function get(uint amount) internal view returns (uint) {
@@ -495,9 +481,9 @@ public function set(int x, SigHashPreimage txPreimage) {
 
 #### 内置对象属性： `msg.sender` 与 `msg.value`
  
-在 Solidity 的函数中比较常用的两个内置对象属性是：`msg.sender` 和 `msg.value`。前者返回当前的函数调用者地址；后者返回该消息中携带的 ether 数量 (单位：`wei`)。
+在 Solidity 中比较常用的两个内置对象属性是：`msg.sender` 和 `msg.value`。前者返回当前的函数调用者地址；后者返回该消息中携带的 ether 数量 (单位：`wei`)。
  
-在转译时，我们将二者分别映射为公共函数的调用者地址以及通过本次调用为合约 UTXO 自身增加的 BSV 数量（单位： `satoshi`）。
+在转译时，我们将二者分别映射为公共函数的调用者地址以及通过本次调用为合约 UTXO 自身增加的 Bitcoin 数量（单位： `satoshi`）。
  
 对于 `msg.sender` 来说，我们在公共方法中增加其对应的 `PubKey` 类型和 `Sig` 类型参数，并在函数中增加以下语句，通过验证签名的有效性进而保证是该地址进行了合约方法调用：
 
@@ -545,28 +531,32 @@ public function xxx(... SigHashPreimage txPreimage) {
   require(this.checkInitBalance(txPreimage));
   ...
 }
+
+function checkInitBalance(SigHashPreimage txPreimage) : bool {
+    return !Tx.isFirstCall(txPreimage) || SigHash.value(txPreimage) == this.initBalance;
+}
 ```
 
 
-## 其他局限性
+## 局限性
  
-目前转译器还有一些其他无法正常进行转译的 Solidity 语法，主要包括以下内容：
- 
-* 不支持元组以及多元赋值表达式；
-* 不支持枚举；
-* 不支持接口；
-* 不支持接口继承；
-* 不支持异常处理机制 `try` / `catch`；
-* 不支持使用 `modifier`；
-* 不支持使用 `receive` / `fallback` 函数；
-* 不支持使用其他内置方法和属性, 例如 `block.*` / `tx.*` / ...；
-* 不支持合约间调用；
-* 忽略所有事件定义以及 `emit()` 函数调用；
-* 不支持 `assembly` 语句；
+因为受限于前面提到的账户模型与 UTXO 模型的根本性差异，这个转译器也会有一定的局限性，无法实现任意类型 Solidity 合约的100%全自动转换。目前转译器还有一些其他无法正常进行转译的 Solidity 语法，主要包括以下：
+
+* 多元赋值
+* 枚举
+* 接口
+* 继承
+* 异常处理机制 `try` / `catch`
+* `modifier`
+* `receive` / `fallback` 函数
+* 某些内置方法和属性, 例如 `block.*` / `tx.*` / ...
+* 合约间调用
+* 所有事件定义以及 `emit()` 函数调用
+*  `assembly` 语句
  
 ## 总结
  
-诚如一开始我们提到的，这个转译器的主要作用是帮助开发者从 Solidity 合约快速过度到 sCrypt 合约，以便能够利用 BSV 区块链更加高效低成本的网络构建 Web3 应用。希望能够对大家有所帮助。如果有任何疑问或建议，请加入我们的 [sCrypt slack 讨论组](https://join.slack.com/t/scryptworkspace/shared_invite/enQtNzQ1OTMyNDk1ODU3LTJmYjE5MGNmNDZhYmYxZWM4ZGY2MTczM2NiNTIxYmFhNTVjNjE5MGYwY2UwNDYxMTQyNGU2NmFkNTY5MmI1MWM) 或者 [github 仓库](https://github.com/sCrypt-Inc/sol2scrypt)。
+诚如一开始我们提到的，这个转译器的主要作用是帮助开发者从 Solidity 合约快速过度到 sCrypt 合约，以便能够利用 Bitcoin 区块链更加高效低成本的网络构建 Web3 应用。希望能够对大家有所帮助。如果有任何疑问或建议，请加入我们的 [sCrypt slack 讨论组](https://join.slack.com/t/scryptworkspace/shared_invite/enQtNzQ1OTMyNDk1ODU3LTJmYjE5MGNmNDZhYmYxZWM4ZGY2MTczM2NiNTIxYmFhNTVjNjE5MGYwY2UwNDYxMTQyNGU2NmFkNTY5MmI1MWM) 或者 [github 仓库](https://github.com/sCrypt-Inc/sol2scrypt)。
 
 
 
