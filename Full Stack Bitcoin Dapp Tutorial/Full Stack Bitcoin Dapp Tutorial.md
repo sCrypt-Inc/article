@@ -479,7 +479,7 @@ web3.call(contractUtxo, (tx) => {
 Constructing a transaction includes:
 
 1. Fetch the latest UTXO containing the contract instance from `ContractUtxos`. as an input to the transaction.
-2. Add output to the transaction according to the game state and game rules. During the process of adding outputs, use `toContractState()` to convert the game state to the contract state.
+2. Add output to the transaction according to the game state and game rules. During the process of adding outputs, use `toContractState()` function to convert the game state to the contract state.
 3. Set the contract unlock script.
 
 ### 4. Update state contract state
