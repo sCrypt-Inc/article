@@ -242,7 +242,9 @@ return (
 
 #### 3. 钱包登入
 
-下面是实现钱包登入的组件 `Auth`。用户点击 **Sensilet** 按钮则调用钱包的 `requestAccount` 接口来登入钱包。
+下面是实现钱包登入的组件 `Auth`。用户点击 **Sensilet** 按钮则调用钱包的 `requestAccount` 接口来登入钱包。钱包插件会出现授权提示框。
+
+![Wallet](./wallet.png)
 
 ```js
 import { web3 } from "./web3";
@@ -355,8 +357,12 @@ const startGame = async (amount) => {
 
 1. 调用钱包的 `listUnspent` 接口，查询可用的 UTXO 来支付部署交易的费用。
 2. 使用[链式 APIs](https://github.com/sCrypt-Inc/scryptlib/blob/master/docs/chained_api_zh_CN.md) 构建包含合约实例 `contract` 的交易
-3. 调用钱包的 `signRawTransaction` 对于交易进行签名
+3. 调用钱包的 `signRawTransaction` 接口对于交易进行签名
 4. 最后调用 `web3.sendRawTx` 广播交易
+
+调用钱包的 `signRawTransaction` 接口需要用户授权。
+
+![授权](./sign.png)
 
 ```js
 static async deploy(contract: AbstractContract, amountInContract: number): Promise<string> {
@@ -496,7 +502,10 @@ this.attachState(); //update stateful contract's states
 
 恭喜你！ 您刚刚在比特币上构建了第一个全栈 dApp。 现在，您可以玩井字游戏或在比特币上构建您自己喜欢的游戏。现在是时候喝些香槟了，或者打开下方连接和小伙伴来一场比赛！
 
+------------------------------
+
 [1]: 本文演示的游戏可以在 [这里](https://scrypt.io/tic-tac-toe/) 试玩
+
 [2]: 本文使用的所有代码均源自这个 [Github Repo](https://github.com/sCrypt-Inc/tic-tac-toe) ，欢迎大家加星收藏。
 
 

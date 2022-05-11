@@ -248,7 +248,9 @@ return (
 
 #### 3. Wallet login
 
-Below is the component `Auth` that implements wallet login. The user clicks the **Sensilet** button to call the wallet's `requestAccount` interface to log in to the wallet.
+Below is the component `Auth` that implements wallet login. The user clicks the **Sensilet** button to call the wallet's `requestAccount` interface to log in to the wallet. An authorization prompt box will appear in the wallet plugin.
+
+![Wallet](./wallet.png)
 
 ```js
 import { web3 } from "./web3";
@@ -361,8 +363,12 @@ The [web3.deploy()](https://github.com/sCrypt-Inc/tic-tac-toe/blob/master/src/we
 
 1. Call the wallet's `listUnspent` interface to query the available UTXO to pay for the deployment transaction.
 2. Use [chained APIs](https://github.com/sCrypt-Inc/scryptlib/blob/master/docs/chained_api_zh_CN.md) to build a transaction containing a contract instance `contract`
-3. Call the wallet's `signRawTransaction` to sign the transaction
+3. Call the wallet's `signRawTransaction` signRawTransaction to sign the transaction
 4. Finally call `web3.sendRawTx` to broadcast the transaction
+
+Calling the wallet's `signRawTransaction` interface requires user authorization.
+
+![](./sign.png)
 
 ```js
 static async deploy(contract: AbstractContract, amountInContract: number): Promise<string> {
