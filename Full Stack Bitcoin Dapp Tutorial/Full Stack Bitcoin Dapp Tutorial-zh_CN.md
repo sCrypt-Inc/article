@@ -351,7 +351,7 @@ const startGame = async (amount) => {
 };
 ```
 
-其中 [web3.deploy](https://github.com/sCrypt-Inc/tic-tac-toe/blob/master/src/web3/web3.ts) 函数是对钱包接口的封装。主要包含以下步骤：
+其中 [web3.deploy()](https://github.com/sCrypt-Inc/tic-tac-toe/blob/master/src/web3/web3.ts#L48) 函数是对钱包接口的封装。主要包含以下步骤：
 
 1. 调用钱包的 `listUnspent` 接口，查询可用的 UTXO 来支付部署交易的费用。
 2. 使用[链式 APIs](https://github.com/sCrypt-Inc/scryptlib/blob/master/docs/chained_api_zh_CN.md) 构建包含合约实例 `contract` 的交易
@@ -414,7 +414,7 @@ this.setState(gameState)
 
 ### 3. 调用合约
 
-使用 `web3.call` 函数来调用合约。第一个参数是包含合约实例的最新UTXO。第二参数是一个回调函数。我们在这个回调函数中使用[链式 APIs](https://github.com/sCrypt-Inc/scryptlib/blob/master/docs/chained_api_zh_CN.md)来构建调用合约的交易。
+使用 [web3.call()](https://github.com/sCrypt-Inc/tic-tac-toe/blob/master/src/web3/web3.ts#L71) 函数来调用合约。第一个参数是包含合约实例的最新UTXO。第二参数是一个回调函数。我们在这个回调函数中使用[链式 APIs](https://github.com/sCrypt-Inc/scryptlib/blob/master/docs/chained_api_zh_CN.md)来构建调用合约的交易。
 
 ```js
 const contractUtxo = ContractUtxos.getlast().utxo;
