@@ -488,7 +488,7 @@ Constructing a transaction includes:
 2. Add output to the transaction according to the game state and game rules. During the process of adding outputs, use `toContractState()` function to convert the game state to the contract state.
 3. Set the contract unlock script.
 
-### 4. Update state contract state
+### 4. Update Contract States
 
 The internal implementation of `web3.call` also calls broadcast transactions. After the broadcast is successful, the called transaction and the UTXO containing the contract instance need to be saved as the input for the next call.
 It also needs to update the game state and the state of the contract instance.
