@@ -29,7 +29,7 @@ Next execute `npx create-react-app tic-tac-toe` to create the web app. Then crea
 The basic idea is to store the state of the game in a contract via [Stateful Contracts](https://scryptdoc.readthedocs.io/en/latest/state.html), using the [general approach](https://xiaohuiliu.medium.com/tic-tac-toe-on-bitcoin-sv-5acdf5bd676d) detailed before. In tic-tac-toe, the state consists of:
 
 1. `isAliceTurn` : Boolean type. Indicates whose turn it is to play, `true` for Alice's turn, `false` for Bob's turn
-2. `board` : Integer array type. Record the current state of the chessboard, each element represents a position on the chessboard, `0` means no piece, `1` means ALICE's piece, `2` means BOB's piece, the length is 9
+2. `board` : Integer array type. Record the current state of the board, each element represents a position on the board, `0` means no piece, `1` means ALICE's piece, `2` means BOB's piece. The length is 9.
 
 Below is the contract code with comments:
 
@@ -38,21 +38,17 @@ Below is the contract code with comments:
 contract TicTacToe {
     PubKey alice;
     PubKey bob;
-
     // if it is alice's turn to play
     @state
     bool isAliceTurn;
-
-    // state of the board. For example, a chess with Alice in the first row 
+    // state of the board. For example, a board with Alice in the first row 
     // and first column is expressed as [1,0,0,0,0,0,0,0,0]
     @state
     int[N] board;
-
     static const int N = 9;
     static const int EMPTY = 0;
     static const int ALICE = 1;
     static const int BOB = 2;
-
     public function move(int n, Sig sig, int amount, SigHashPreimage txPreimage) {
 
         require(Tx.checkPreimage(txPreimage));
@@ -197,17 +193,17 @@ updateStates({
 
 ```
 
-### Integrated wallet
+### Integrate wallet
 
-Deploying the contract object `instance` to the Bitcoin network requires Bitcoins. To do this, we need to access the wallet first to get bitcoins. Here we take [sensilet](https://sensilet.com) as an example to introduce how to access the wallet.
+Deploying the contract object `instance` to the Bitcoin network requires bitcoins. To do this, we need to access a wallet first to get bitcoins. Here we take [sensilet](https://sensilet.com) as an example to introduce how to access a wallet.
 
 #### 1. Wallet implementation
 
-We define some common wallet interfaces in [wallet.ts](https://github.com/sCrypt-Inc/tic-tac-toe/blob/master/src/web3/wallet.ts). And use sensilet to implement these interfaces. See the specific implementation: [sensiletwallet.ts](https://github.com/sCrypt-Inc/tic-tac-toe/blob/master/src/web3/sensiletwallet.ts)
+We define some common wallet interfaces in [wallet.ts](https://github.com/sCrypt-Inc/tic-tac-toe/blob/master/src/web3/wallet.ts) and use sensilet to implement these interfaces. See the specific implementation at [sensiletwallet.ts](https://github.com/sCrypt-Inc/tic-tac-toe/blob/master/src/web3/sensiletwallet.ts)
 
 #### 2. Wallet initialization
 
-When `App` loads, use `useEffect` to initialize the wallet. First, set up a `SensiletWallet` wallet for `web3`. Then call `web3.wallet.isConnected()` to save the status of whether the wallet is connected.
+When `App` loads, we use `useEffect` to initialize the wallet. First, we set up a `SensiletWallet` wallet for `web3`. Then we call `web3.wallet.isConnected()` to save the status of whether the wallet is connected.
 
 ```js
 // init web3 wallet
@@ -232,7 +228,7 @@ When `App` loads, use `useEffect` to initialize the wallet. First, set up a `Sen
   }, []);
 ```
 
-In the rendering code of `App`, it is determined whether to render the wallet login component `Auth` or the wallet balance component `Balance` by judging the state of `states.isConnected`.
+In the rendering code of `App`, it is determined whether to render the wallet login component `Auth` or the wallet balance component `Balance` by checking the state of `states.isConnected`.
 
 ```js
 return (
@@ -248,7 +244,7 @@ return (
 
 #### 3. Wallet login
 
-Below is the component `Auth` that implements wallet login. The user clicks the **Sensilet** button to call the wallet's `requestAccount` interface to log in to the wallet. An authorization prompt box will appear in the wallet plugin.
+Below is the component `Auth` that implements wallet login. The user clicks the **Sensilet** button to call the wallet's `requestAccount` interface to log into the wallet. An authorization prompt box will appear in the wallet plugin.
 
 ![Wallet](./wallet.png)
 
@@ -287,7 +283,7 @@ export default Auth;
 
 #### 4. Wallet balance
 
-The `Balance` component calls the `getbalance` interface of the wallet to implement the function of displaying the wallet balance.
+The `Balance` component calls the `getbalance` interface of the wallet to display the balance.
 
 ```js
 import { useState, useEffect } from "react";
@@ -322,7 +318,7 @@ After accessing the wallet, you can start deploying the contract.
 
 ### Deploying the contract
 
-When the **Start** button is clicked to start the game, the `startGame` method in `App` will be called back. This function implements the function of deploying a contract instance to the Bitcoin network. After successful deployment, save the UTXO containing the contract and the initial game state to *localStorage*, and update the `React` state.
+When the **Start** button is clicked to start the game, the `startGame` method in `App` will be called back. This function implements the function of deploying a contract instance to the Bitcoin network. After successful deployment, we save the UTXO containing the contract and the initial game state to *localStorage* and update the `React` state.
 
 ```js
 const startGame = async (amount) => {
@@ -361,10 +357,10 @@ const startGame = async (amount) => {
 
 The [web3.deploy()](https://github.com/sCrypt-Inc/tic-tac-toe/blob/master/src/web3/web3.ts#L48) function is the encapsulation of the wallet interface. It mainly includes the following steps:
 
-1. Call the wallet's `listUnspent` interface to query the available UTXO to pay for the deployment transaction.
+1. Call the wallet's `listUnspent` interface to query the available UTXOs to pay for the deployment transaction fee
 2. Use [chained APIs](https://github.com/sCrypt-Inc/scryptlib/blob/master/docs/chained_api_zh_CN.md) to build a transaction containing a contract instance `contract`
-3. Call the wallet's `signRawTransaction` signRawTransaction to sign the transaction
-4. Finally call `web3.sendRawTx` to broadcast the transaction
+3. Call the wallet's `signRawTransaction` to sign the transaction
+4. Finally call `web3.sendRawTx` to broadcast the transaction.
 
 Calling the wallet's `signRawTransaction` interface requires user authorization.
 
@@ -402,7 +398,7 @@ After the deployment is successful, you can start the game.
 
 ## Call Contract
 
-The next step is to start playing chess. Each chess move is a call to the contract and triggers a change in the contract state. The interaction of the web application with the contract mainly occurs in this phase. It mainly includes the following steps:
+The next step is to start playing. Each move is a call to the contract and triggers a change in the contract state. The interaction of the web application with the contract mainly occurs in this phase. It mainly includes the following steps:
 
 ### 1. Alice or Bob clicks on the square
 
@@ -484,13 +480,13 @@ web3.call(contractUtxo, (tx) => {
 
 Constructing a transaction includes:
 
-1. Fetch the latest UTXO containing the contract instance from `ContractUtxos`. as an input to the transaction.
+1. Fetch the latest UTXO containing the contract instance from `ContractUtxos` as an input to the transaction.
 2. Add output to the transaction according to the game state and game rules. During the process of adding outputs, use `toContractState()` function to convert the game state to the contract state.
 3. Set the contract unlock script.
 
 ### 4. Update Contract States
 
-The internal implementation of `web3.call` also calls broadcast transactions. After the broadcast is successful, the called transaction and the UTXO containing the contract instance need to be saved as the input for the next call.
+The internal implementation of `web3.call` also broadcasts transactions. After the broadcast is successful, the called transaction and the UTXO containing the contract instance need to be saved as the input for the next call.
 It also needs to update the game state and the state of the contract instance.
 
 ```js
@@ -502,12 +498,12 @@ GameData.update(gameState); //update game's states
 this.attachState(); //update stateful contract's states
 ```
 
-So far, we have completed the binding of the TicTacToe chess action and the contract call. Each chess action of the player generates a corresponding transaction on the blockchain.
+So far, we have completed the binding of the TicTacToe action and the contract call. Each action of the player generates a corresponding transaction on the blockchain.
 
 
 # Summarize
 
-congratulations! You've just built your first full-stack dApp on Bitcoin. Now you can play tic-tac-toe or build your own favorite game on Bitcoin. It's time to drink some champagne, or open the link below and have a game with your friends!
+Congratulations! You've just built your first full-stack dApp on Bitcoin. How cool is that? Now you can play tic-tac-toe or build your own favorite game on Bitcoin. It's time to drink some champagne, or open the link below and play a game with your friends! Happy coding on Bitcoin.
 
 ---------------
 
