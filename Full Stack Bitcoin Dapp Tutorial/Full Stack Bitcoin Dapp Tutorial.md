@@ -1,10 +1,14 @@
 # Full Stack Bitcoin Dapp Tutorial
 
-Today we will show you how to build a decentralized application (a.k.a, dApp), on the Bitcoin SV blockchain. We will walk through the entire process of building a full stack decentralized application, including:
+In our previous blog, we covered how to use sCrypt to write Bitcoin smart contracts. But as a beginning developer, you may be more interested in how to use sCrypt to build dApps. Next we will teach you how to build a tic-tac-toe dApp using sCrypt step by step.
 
-Write a contract
-Test the contract
-Interact with the contract through a simple web app
+The application is very simple, all it does is use the public keys of two players (Alice and Bob) to initialize a contract, and only the winning player can withdraw the money in the contract. If no one wins at the end, both players can each take half of the money. We'll show you how to build decentralized applications (aka dApps) on the Bitcoin SV blockchain, including:
+
+
+- Write a contract
+- Test the contract
+- Interact with the contract through a simple web app
+
 By the end, you will have a fully functional [tic-tac-toe](https://scrypt.io/tic-tac-toe) app running on Bitcoin.
 
 ![DApp](dapp.gif)
@@ -17,10 +21,8 @@ Before we dive into the app, make sure you have the following dependencies insta
 1. [sCrypt IDE](https://marketplace.visualstudio.com/items?itemName=bsv-scrypt.sCrypt)
 2. [nodejs](https://nodejs.org/en/), version >= 12
 3. [Typescript](https://www.typescriptlang.org/)
-3. [create-react-app](https://github.com/facebook/create-react-app)
 
-
-Next execute `npx create-react-app tic-tac-toe` to create the web app. Then create a `contracts` and `test` directories in the root directory to store the contract code and the test code of the contract respectively. You will see the following directory structure.
+Use Git to clone the React App project [tic-tac-toe](https://github.com/sCrypt-Inc/tic-tac-toe), and switch to the `webapp` branch. This branch contains a tic-tac-toe game with only front-end code. Then create a `contracts` and `test` directories in the root directory to store the contract code and the test code of the contract respectively. You will see the following directory structure.
 
 ![directory structure.](./dir_en.png)
 
@@ -29,7 +31,7 @@ Next execute `npx create-react-app tic-tac-toe` to create the web app. Then crea
 The basic idea is to store the state of the game in a contract via [Stateful Contracts](https://scryptdoc.readthedocs.io/en/latest/state.html), using the [general approach](https://xiaohuiliu.medium.com/tic-tac-toe-on-bitcoin-sv-5acdf5bd676d) detailed before. In tic-tac-toe, the state consists of:
 
 1. `isAliceTurn` : Boolean type. Indicates whose turn it is to play, `true` for Alice's turn, `false` for Bob's turn
-2. `board` : Integer array type. Record the current state of the board, each element represents a position on the board, `0` means no piece, `1` means ALICE's piece, `2` means BOB's piece. The length is 9.
+2. `board` : Integer array type. Record the current state of the board, each element represents a position on the board, `0` means no piece, `1` means ALICE's piece, `2` means BOB's piece. The length is `9`.
 
 Below is the contract code with comments:
 
@@ -130,6 +132,37 @@ First, a certain amount of Bitcoin is locked in a UTXO containing the above cont
 2. If the board is full and no one wins, it is a tie, Alice and Bob each get half of the money
 3. Otherwise, the game is still in progress and the next player moves the piece
 
+## scryptlib
+
+The dApp needs to interact with the contract on the front-end page. To do this, we will use sCrypt's official JavaScript library - [scryptlib](https://github.com/sCrypt-Inc/scryptlib).
+
+> scryptlib is a Javascript/TypeScript SDK for integrating Bitcoin SV smart contracts written in the sCrypt language.
+
+With `scryptlib`, you can easily compile, test, deploy, and call contracts.
+
+### Install scryptlib
+
+`scryptlib` can be installed via `npm`.
+
+
+```javascript
+// use NPM
+npm install scryptlib
+
+// use Yarn
+yarn add scryptlib
+```
+
+The code to instantiate and call the contract's public methods using `scryptlib` looks like:
+
+```javascript
+const Demo = buildContractClass(compileContract('demo.scrypt'));
+const demo = new Demo(7, 4);
+
+const result = demo.add(11).verify()
+assert(result.success);
+```
+
 ## Test the Contract
 
 Let’s write some tests in Javascript to make sure our contract is working as expected. We will use the [sCrypt testing framework](https://github.com/sCrypt-Inc/boilerplate#how-to-write-test-for-an-scrypt-contract), by simulating calling `move()` and expecting the game state.
@@ -158,7 +191,8 @@ it('One full round where Alice wins', () => {
 
 ## Simple Webpage to Interact with the Contract
 
-We will reuse the existing [tic-tac-toe](https://github.com/guar47/react-tutorial- tic-tac-toe) project. If you have experience with front-end development, this should look familiar. We will focus on the part of integrating smart contracts.
+We assume you already have the basics of front-end development, so we won't take the time to cover the basics of these techniques. We will focus on the part of integrating smart contracts.
+
 
 ### Compile the contract
 
@@ -398,105 +432,86 @@ After the deployment is successful, you can start the game.
 
 ## Call Contract
 
-The next step is to start playing. Each move is a call to the contract and triggers a change in the contract state. The interaction of the web application with the contract mainly occurs in this phase. It mainly includes the following steps:
+The next step is to start playing chess. Each chess move is a call to the contract and triggers a change in the contract state. The interaction of the web application with the contract mainly occurs in this phase.
 
-### 1. Alice or Bob clicks on the square
+As with the deployment contract, we use the `web3.call()`, which provided by the [web3](https://github.com/sCrypt-Inc/tic-tac-toe/blob/7ae1eb8cb46bd8315d9c7d858b6a190ba3c4c306/src/web3/web3.ts#L71) tool class, to call the contract.
 
-The `handleClick()` function in [game.js](https://github.com/sCrypt-Inc/tic-tac-toe/blob/d5c309fce39d8a42202ec5fd056f56c03df7c87a/src/Game.js#L129) responds to the click event. First call the `canMove` method to check if the piece can be moved.
+The first argument of function `web3.call()` is a **UTXO** containing the contract instance as the first input to construct the transaction that calls the contract. The second parameter is a callback function. we are at
+[Chained APIs](https://github.com/sCrypt-Inc/scryptlib/blob/master/docs/chained_api_en.md) is used in the callback function to construct a complete transaction calling the contract.
+
+Calling a contract requires the following work:
+
+1. Fetch the latest UTXO containing the contract instance from storage. as an input to the transaction.
+2. Add output to the transaction according to the game state and game rules. During the process of adding outputs, use the `toContractState()` function to convert the game state to the contract state.
 
 ```js
-if (!this.canMove(this.state.isAliceTurn, i, squares)) {
-    console.error('can not move now!')
-    return;
+
+let winner = calculateWinner(squares).winner;
+
+if (winner) { // Current Player won
+  let address = PlayerAddress.get(CurrentPlayer.get());
+
+  tx.setOutput(0, (tx) => {
+    return new bsv.Transaction.Output({
+      script: bsv.Script.buildPublicKeyHashOut(address),
+      satoshis: contractUtxo.satoshis - tx.getEstimateFee(),
+    })
+  })
+
+} else if (history.length >= 9) { //board is full
+
+  tx.setOutput(0, (tx) => {
+    return new bsv.Transaction.Output({
+      script: bsv.Script.buildPublicKeyHashOut(PlayerAddress.get(Player.Alice)),
+      satoshis: (contractUtxo.satoshis - tx.getEstimateFee()) /2,
+    })
+  })
+  .setOutput(1, (tx) => {
+    return new bsv.Transaction.Output({
+      script: bsv.Script.buildPublicKeyHashOut(PlayerAddress.get(Player.Bob)),
+      satoshis: (contractUtxo.satoshis - tx.getEstimateFee()) /2,
+    })
+  })
+
+} else { //continue move
+
+  const newStates = toContractState(gameState);
+  const newLockingScript = this.props.contractInstance.getNewStateScript(newStates);
+  tx.setOutput(0, (tx) => {
+    const amount = contractUtxo.satoshis - tx.getEstimateFee();
+    return new bsv.Transaction.Output({
+      script: newLockingScript,
+      satoshis: amount,
+    })
+  })
 }
 ```
 
-### 2. Update game status
-
-When the pieces can be moved, first update the game state and trigger the GUI to respond.
+3. Set up the contract unlocking script.
 
 ```js
-// update states
-this.setState(gameState)
-```
+tx.setInputScript(0, (tx, output) => {
 
-### 3. Call Contract
+  const preimage = getPreimage(tx, output.script, output.satoshis)
+  const privateKey = new bsv.PrivateKey.fromWIF(PlayerPrivkey.get(CurrentPlayer.get()));
+  const sig = signTx(tx, privateKey, output.script, output.satoshis)
+  const amount = contractUtxo.satoshis - tx.getEstimateFee();
 
-Use the [web3.call()](https://github.com/sCrypt-Inc/tic-tac-toe/blob/master/src/web3/web3.ts#L71) function to call the contract. The first parameter is the latest UTXO containing the contract instance. The second parameter is a callback function. We use [chained APIs](https://github.com/sCrypt-Inc/scryptlib/blob/master/docs/chained_api_zh_CN.md) in this callback function to construct the transaction that calls the contract.
-
-```js
-const contractUtxo = ContractUtxos.getlast().utxo;
-
-web3.call(contractUtxo, (tx) => {
-    let winner = calculateWinner(squares).winner;
-    if (winner) { // Current Player won
-        let address = PlayerAddress.get(CurrentPlayer.get());
-        tx.setOutput(0, (tx) => {
-            return new bsv.Transaction.Output({
-            script: bsv.Script.buildPublicKeyHashOut(address),
-            satoshis: contractUtxo.satoshis - tx.getEstimateFee(),
-            })
-        })
-
-    } else if (history.length >= 9) { //board is full
-
-        tx.setOutput(0, (tx) => {
-            return new bsv.Transaction.Output({
-            script: bsv.Script.buildPublicKeyHashOut(PlayerAddress.get(Player.Alice)),
-            satoshis: (contractUtxo.satoshis - tx.getEstimateFee()) /2,
-            })
-        })
-        .setOutput(1, (tx) => {
-            return new bsv.Transaction.Output({
-            script: bsv.Script.buildPublicKeyHashOut(PlayerAddress.get(Player.Bob)),
-            satoshis: (contractUtxo.satoshis - tx.getEstimateFee()) /2,
-            })
-        })
-
-    } else { //continue move
-
-        const newStates = toContractState(gameState);
-        const newLockingScript = this.props.contractInstance.getNewStateScript(newStates);
-        tx.setOutput(0, (tx) => {
-            const amount = contractUtxo.satoshis - tx.getEstimateFee();
-            return new bsv.Transaction.Output({
-            script: newLockingScript,
-            satoshis: amount,
-            })
-        })
-    }
-
-    tx.setInputScript(0, (tx, output) => {
-        const preimage = getPreimage(tx, output.script, output.satoshis)
-        const privateKey = new bsv.PrivateKey.fromWIF(PlayerPrivkey.get(CurrentPlayer.get()));
-        const sig = signTx(tx, privateKey, output.script, output.satoshis)
-        const amount = contractUtxo.satoshis - tx.getEstimateFee();
-
-        return this.props.contractInstance.move(i, sig, amount, preimage).toScript();
-    })
-    .seal()
+  return this.props.contractInstance.move(i, sig, amount, preimage).toScript();
 })
+.seal()
 ```
 
-Constructing a transaction includes:
+4. Broadcast transactions using the `sendRawTransaction` interface provided by the wallet. This is wrapped in `web3.call()`.
 
-1. Fetch the latest UTXO containing the contract instance from `ContractUtxos` as an input to the transaction.
-2. Add output to the transaction according to the game state and game rules. During the process of adding outputs, use `toContractState()` function to convert the game state to the contract state.
-3. Set the contract unlock script.
-
-### 4. Update Contract States
-
-The internal implementation of `web3.call` also broadcasts transactions. After the broadcast is successful, the called transaction and the UTXO containing the contract instance need to be saved as the input for the next call.
-It also needs to update the game state and the state of the contract instance.
+5. After the broadcast is successful, the called transaction and the UTXO containing the contract instance need to be saved as the input for the next calling. It also needs to update the game state and the state of the contract instance.
 
 ```js
-squares[i].tx = utxo.utxo.txId; //bind transaction to square
-squares[i].n = history.length; 
-
 const utxo = ContractUtxos.add(rawTx); // save latest utxo
 GameData.update(gameState); //update game's states
 this.attachState(); //update stateful contract's states
 ```
+
 
 So far, we have completed the binding of the TicTacToe action and the contract call. Each action of the player generates a corresponding transaction on the blockchain.
 

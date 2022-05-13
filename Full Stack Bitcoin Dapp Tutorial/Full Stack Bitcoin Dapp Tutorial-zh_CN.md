@@ -28,7 +28,7 @@
 `TicTacToe` 合约主要实现原理是通过[有状态合约](https://scryptdoc.readthedocs.io/zh_CN/latest/state.html)将游戏的状态存储在合约中。井字棋游戏状态由以下组成：
 
 1. `turn` : 布尔类型。表示轮到谁下棋, `true` 表示轮到 Alice， `false` 表示轮到 Bob
-2. `board` : 整数数组类型。记录棋盘当前的状态，每个元素代表棋盘的一个位置，`0` 表示没有棋子，`1` 表示 ALICE的棋子，`2` 表示BOB的棋子，长度为 9
+2. `board` : 整数数组类型。记录棋盘当前的状态，每个元素代表棋盘的一个位置，`0` 表示没有棋子，`1` 表示 ALICE的棋子，`2` 表示BOB的棋子，长度为 `9`
 
 下面是带有注释的合约代码。
 
@@ -142,7 +142,7 @@ dApp 需要在前端页面与合约进行交互。 要做到这一点，我们�
 通过 `scryptlib` ，你就能方便地编译，测试，部署，调用合约了。
 
 
-## scryptlib 安装
+### 安装 scryptlib
 
 `scryptlib` 可以通过 `npm` 安装。
 
@@ -484,6 +484,7 @@ if (winner) { // Current Player won
   })
 }
 ```
+
 3. 设置合约解锁脚本。
 
 ```js
