@@ -156,7 +156,7 @@ it('One full round where Alice wins', () => {
 ```
 <center><a href="https://github.com/sCrypt-Inc/tic-tac-toe/blob/master/test/tictactoe.scrypttest.js">tictactoe.scrypttest.js</a></center>
 
-## Integrate Web Apps
+## Simple Webpage to Interact with the Contract
 
 We will reuse the existing [tic-tac-toe](https://github.com/guar47/react-tutorial- tic-tac-toe) project. If you have experience with front-end development, this should look familiar. We will focus on the part of integrating smart contracts.
 
@@ -195,7 +195,7 @@ updateStates({
 
 ### Integrate wallet
 
-Deploying the contract object `instance` to the Bitcoin network requires bitcoins. To do this, we need to access a wallet first to get bitcoins. Here we take [sensilet](https://sensilet.com) as an example to introduce how to access a wallet.
+Deploying the contract object `instance` to the Bitcoin network requires bitcoins. To do this, we need to access a wallet first to get bitcoins. Here we take [sensilet](https://sensilet.com) as an example to introduce how to access the wallet.
 
 #### 1. Wallet implementation
 

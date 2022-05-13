@@ -1,6 +1,8 @@
 # 基于 sCrypt 合约开发一个完整的 dApp：井字棋游戏
 
-今天，我们将向您展示如何在比特币 SV 区块链上构建去中心化应用程序（又名 dApp）。我们将介绍构建全栈去中心化应用的全过程，包括：
+在我们之前的博客中，介绍了如何使用 sCrypt 来编写比特币智能合约。但是作为刚入门的开发者，你可能对如何使用 sCrypt 来构建 dApp 更加感兴趣。接下来我们将教大家如何使用 sCrypt 一步一步地构建一个井字棋 dApp.
+
+该应用程序非常简单，它所做的就是使用两个玩家(分别是 Alice 和 Bob)的公钥，初始化合约，只有赢得那玩家可以取走合约里面的钱。如果最后没有人赢，则两个玩家各自可以取走一半的钱。我们将向您展示如何在比特币 SV 区块链上构建去中心化应用程序（又名 dApp），包括：
 
 1. 编写合约
 2. 测试合约
@@ -16,9 +18,8 @@
 1. 安装 sCrypt IDE，见 [sCrypt 开发工具篇 - Visual Studio Code 插件](https://blog.csdn.net/freedomhero/article/details/107127341)
 2. 安装 [nodejs](https://nodejs.org/en/), version >= 12
 3. 安装 [Typescript](https://www.typescriptlang.org/)
-3. 安装 [create-react-app](https://github.com/facebook/create-react-app)
 
-接下来执行 `npx create-react-app tic-tac-toe` 创建 web app。然后在根目录下创建一个 `contracts` 和 `test`目录，分别用来存放合约代码和合约的测试代码。你将看到以下目录结构。
+使用 Git 克隆 React App 项目 [tic-tac-toe](https://github.com/sCrypt-Inc/tic-tac-toe)， 并切换到的 `webapp` 分支。 该分支包含一个只有前端代码的井字棋游戏。然后在根目录下创建一个 `contracts` 和 `test`目录，分别用来存放合约代码和合约的测试代码。你将看到以下目录结构。
 
 ![目录结构](./dir_cn.png)
 
@@ -130,9 +131,43 @@ contract TicTacToe {
 2. 如果棋盘已满且无人获胜，则为平局，Alice 和 Bob 各拿一半的资金
 3. 否则，游戏仍在进行中，下一个玩家移动棋子
 
+
+## scryptlib
+
+dApp 需要在前端页面与合约进行交互。 要做到这一点，我们将使用 sCrypt 官方发布的 JavaScript 库 —— [scryptlib](https://github.com/sCrypt-Inc/scryptlib).
+
+> scryptlib 是用于集成以 sCrypt 语言编写的 Bitcoin SV 智能合约的 Javascript/TypeScript SDK。
+
+
+通过 `scryptlib` ，你就能方便地编译，测试，部署，调用合约了。
+
+
+## scryptlib 安装
+
+`scryptlib` 可以通过 `npm` 安装。
+
+```javascript
+// use NPM
+npm install scryptlib
+
+// use Yarn
+yarn add scryptlib
+```
+
+使用 `scryptlib` 实例化和调用合约公共方法的代码看起来像:
+
+```javascript
+const Demo = buildContractClass(compileContract('demo.scrypt'));
+const demo = new Demo(7, 4);
+
+const result = demo.add(11).verify()
+assert(result.success);
+```
+
+
 ## 测试合约
 
-接下来我们用 Javascript 编写合约的单元测试，以确保合约在上线部署之前能够按预期工作。 通过[sCrypt 测试框架](https://github.com/sCrypt-Inc/boilerplate#how-to-write-test-for-an-scrypt-contract)，我们可以模拟调用 `move()` 并断言游戏状态。
+接下来我们用 scryptlib 编写合约的单元测试，以确保合约在上线部署之前能够按预期工作。 通过[sCrypt 测试框架](https://github.com/sCrypt-Inc/boilerplate#how-to-write-test-for-an-scrypt-contract)，我们可以模拟调用 `move()` 并断言游戏状态。
 
 ```
 it('One full round where Alice wins', () => {
@@ -157,7 +192,7 @@ it('One full round where Alice wins', () => {
 
 ## 集成 Web App
 
-我们将复用 [官方 React 教程](https://reactjs.org/tutorial/tutorial.html) 中现有的 [tic-tac-toe](https://github.com/guar47/react-tutorial-tic-tac-toe) 项目。如果您有前端开发的经验，这应该看起来很熟悉。我们将专注于集成智能合约的部分。
+我们假设你已经具备前端开发的基础知识，因此我们不会花时间来介绍这些技术的基础知识。我们将专注于集成智能合约的部分。
 
 ### 编译合约
 
@@ -204,26 +239,25 @@ updateStates({
 在 `App` 加载时， 使用 `useEffect` 来初始化钱包。首先，为 `web3` 设置一个 `SensiletWallet` 钱包。然后调用 `web3.wallet.isConnected()` 将钱包是否连接的状态保存起来。
 
 ```js
-// init web3 wallet
-  useEffect(async () => {
-    const timer = setTimeout(async ()=> {
-        //set a SensiletWallet for web3
-        web3.setWallet(new SensiletWallet());
-        const isConnected = await web3.wallet.isConnected();
+useEffect(async () => {
+  const timer = setTimeout(async ()=> {
+      //set a SensiletWallet for web3
+      web3.setWallet(new SensiletWallet());
+      const isConnected = await web3.wallet.isConnected();
 
-        ...
+      ...
 
-        updateStates({
-            ...
-            isConnected: isConnected,
-        })
-  
-    }, 100)
+      updateStates({
+          ...
+          isConnected: isConnected,
+      })
 
-    return () => {
-      clearTimeout(timer)
-    }
-  }, []);
+  }, 100)
+
+  return () => {
+    clearTimeout(timer)
+  }
+}, []);
 ```
 
 在 `App` 的渲染代码中，通过判断 `states.isConnected` 状态来决定渲染钱包登入组件 `Auth` 还是钱包余额组件 `Balance`。
@@ -396,107 +430,86 @@ static async deploy(contract: AbstractContract, amountInContract: number): Promi
 
 ## 调用合约
 
-接下来就是开始下棋了，每下一步棋，就是对合约的一次调用，并触发合约状态的改变。Web 应用程序与合约的交互主要发生在这个阶段。主要包含以下步骤：
+接下来就是开始下棋了，每下一步棋，就是对合约的一次调用，并触发合约状态的改变。Web 应用程序与合约的交互主要发生在这个阶段。
 
-### 1. Alice 或者 Bob 点击方块
+和部署合约一样，我们通过 [web3](https://github.com/sCrypt-Inc/tic-tac-toe/blob/7ae1eb8cb46bd8315d9c7d858b6a190ba3c4c306/src/web3/web3.ts#L71) 工具类提供的 `web3.call()` 来调用合约。
 
-[game.js](https://github.com/sCrypt-Inc/tic-tac-toe/blob/d5c309fce39d8a42202ec5fd056f56c03df7c87a/src/Game.js#L129) 中的 `handleClick()` 函数响应了点击事件。首先调用 `canMove` 方法检查能否移动棋子。
+`web3.call()` 第一个参数是包含合约实例的 **UTXO**，作为构建调用合约的交易的第一个输入。第二个参数是一个回调函数。我们在
+回调函数中使用[链式 APIs](https://github.com/sCrypt-Inc/scryptlib/blob/master/docs/chained_api_zh_CN.md) 来构建完整的调用合约的交易。
+
+调用合约需要完成以下工作:
+
+1. 从存储中取出包含合约实例的最新的 UTXO。作为交易的输入。
+2. 根据游戏的状态和游戏规则来给交易添加输出。添加输出的过程中， 使用 `toContractState()` 函数将游戏状态转换成合约状态。
 
 ```js
-if (!this.canMove(this.state.isAliceTurn, i, squares)) {
-    console.error('can not move now!')
-    return;
+
+let winner = calculateWinner(squares).winner;
+
+if (winner) { // Current Player won
+  let address = PlayerAddress.get(CurrentPlayer.get());
+
+  tx.setOutput(0, (tx) => {
+    return new bsv.Transaction.Output({
+      script: bsv.Script.buildPublicKeyHashOut(address),
+      satoshis: contractUtxo.satoshis - tx.getEstimateFee(),
+    })
+  })
+
+} else if (history.length >= 9) { //board is full
+
+  tx.setOutput(0, (tx) => {
+    return new bsv.Transaction.Output({
+      script: bsv.Script.buildPublicKeyHashOut(PlayerAddress.get(Player.Alice)),
+      satoshis: (contractUtxo.satoshis - tx.getEstimateFee()) /2,
+    })
+  })
+  .setOutput(1, (tx) => {
+    return new bsv.Transaction.Output({
+      script: bsv.Script.buildPublicKeyHashOut(PlayerAddress.get(Player.Bob)),
+      satoshis: (contractUtxo.satoshis - tx.getEstimateFee()) /2,
+    })
+  })
+
+} else { //continue move
+
+  const newStates = toContractState(gameState);
+  const newLockingScript = this.props.contractInstance.getNewStateScript(newStates);
+  tx.setOutput(0, (tx) => {
+    const amount = contractUtxo.satoshis - tx.getEstimateFee();
+    return new bsv.Transaction.Output({
+      script: newLockingScript,
+      satoshis: amount,
+    })
+  })
 }
 ```
-
-### 2. 更新游戏状态
-
-可以移动棋子的情况下，首先更新游戏状态，触发 GUI 做出响应。
-
-```js
-// update states
-this.setState(gameState)
-```
-
-### 3. 调用合约
-
-使用 [web3.call()](https://github.com/sCrypt-Inc/tic-tac-toe/blob/master/src/web3/web3.ts#L71) 函数来调用合约。第一个参数是包含合约实例的最新UTXO。第二参数是一个回调函数。我们在这个回调函数中使用[链式 APIs](https://github.com/sCrypt-Inc/scryptlib/blob/master/docs/chained_api_zh_CN.md)来构建调用合约的交易。
-
-```js
-const contractUtxo = ContractUtxos.getlast().utxo;
-
-web3.call(contractUtxo, (tx) => {
-    let winner = calculateWinner(squares).winner;
-    if (winner) { // Current Player won
-        let address = PlayerAddress.get(CurrentPlayer.get());
-        tx.setOutput(0, (tx) => {
-            return new bsv.Transaction.Output({
-            script: bsv.Script.buildPublicKeyHashOut(address),
-            satoshis: contractUtxo.satoshis - tx.getEstimateFee(),
-            })
-        })
-
-    } else if (history.length >= 9) { //board is full
-
-        tx.setOutput(0, (tx) => {
-            return new bsv.Transaction.Output({
-            script: bsv.Script.buildPublicKeyHashOut(PlayerAddress.get(Player.Alice)),
-            satoshis: (contractUtxo.satoshis - tx.getEstimateFee()) /2,
-            })
-        })
-        .setOutput(1, (tx) => {
-            return new bsv.Transaction.Output({
-            script: bsv.Script.buildPublicKeyHashOut(PlayerAddress.get(Player.Bob)),
-            satoshis: (contractUtxo.satoshis - tx.getEstimateFee()) /2,
-            })
-        })
-
-    } else { //continue move
-
-        const newStates = toContractState(gameState);
-        const newLockingScript = this.props.contractInstance.getNewStateScript(newStates);
-        tx.setOutput(0, (tx) => {
-            const amount = contractUtxo.satoshis - tx.getEstimateFee();
-            return new bsv.Transaction.Output({
-            script: newLockingScript,
-            satoshis: amount,
-            })
-        })
-    }
-
-    tx.setInputScript(0, (tx, output) => {
-        const preimage = getPreimage(tx, output.script, output.satoshis)
-        const privateKey = new bsv.PrivateKey.fromWIF(PlayerPrivkey.get(CurrentPlayer.get()));
-        const sig = signTx(tx, privateKey, output.script, output.satoshis)
-        const amount = contractUtxo.satoshis - tx.getEstimateFee();
-
-        return this.props.contractInstance.move(i, sig, amount, preimage).toScript();
-    })
-    .seal()
-})
-```
-
-构建交易包括： 
-
-1. 从 `ContractUtxos` 中取出包含合约实例的最新的 UTXO。作为交易的输入。
-2. 根据游戏的状态和游戏规则来给交易添加输出。添加输出的过程中， 使用 `toContractState()` 函数将游戏状态转换成合约状态。
 3. 设置合约解锁脚本。
 
-### 4. 更新合约状态
+```js
+tx.setInputScript(0, (tx, output) => {
 
-`web3.call` 的内部实现同样会调用广播交易。广播成功后，需要保存调用的交易和包含合约实例的UTXO, 作为下一次调用的输入。
-同时还需要更新游戏状态和合约实例的状态。
+  const preimage = getPreimage(tx, output.script, output.satoshis)
+  const privateKey = new bsv.PrivateKey.fromWIF(PlayerPrivkey.get(CurrentPlayer.get()));
+  const sig = signTx(tx, privateKey, output.script, output.satoshis)
+  const amount = contractUtxo.satoshis - tx.getEstimateFee();
+
+  return this.props.contractInstance.move(i, sig, amount, preimage).toScript();
+})
+.seal()
+```
+
+4. 使用钱包提供的 `sendRawTransaction` 接口广播交易。这封装在 `web3.call()` 中。
+
+5. 广播成功后，需要保存调用的交易和包含合约实例的UTXO, 作为下一次调用的输入。 同时还需要更新游戏状态和合约实例的状态。
 
 ```js
-squares[i].tx = utxo.utxo.txId; //bind transaction to square
-squares[i].n = history.length; 
-
 const utxo = ContractUtxos.add(rawTx); // save latest utxo
 GameData.update(gameState); //update game's states
 this.attachState(); //update stateful contract's states
 ```
 
-至此，我们完成了 TicTacToe 小游戏下棋动作和合约调用的绑定，玩家的每个下棋动作，都产生一个区块链上的交易与之对应。
+至此，我们完成了 `TicTacToe` 合约与 webapp 的交互，玩家的每个下棋动作，都产生一个区块链上的交易与之对应。
 
 # 总结
 
