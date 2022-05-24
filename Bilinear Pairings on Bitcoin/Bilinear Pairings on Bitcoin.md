@@ -10,8 +10,8 @@
 基于配对的密码学的几种应用已在许多区块链中得到实际应用。
 
 - `Zcash` 实现了自己的零知识证明算法，名为 zk-SNARKs（零知识简洁非交互式知识论证）
-- `DFINITY` 构建了基于 BLS 签名的方案，比 ECDSA 签名更短
-- 在以太坊 2.0 中，Prysm 项目通过利用 DFINITY 的随机信标链游乐场 [[26]](https://tools.ietf.org/id/draft-yonezawa-pairing-friendly-curves-00.html#ethereum) 应用签名聚合以获得可扩展性优势。他们的代码发布在 GitHub 上。
+- 以太坊支持[配对检查](https://eips.ethereum.org/EIPS/eip-197)以执行 zkSNARK 验证
+- DFINITY（现在称为互联网计算机）构建了一个基于 BLS 签名的方案，比 ECDSA 签名更短。
 
 
 我们将展示配对可以直接在比特币上实现，从而使以前认为不可能在比特币上实现的各种基于配对的密码学应用成为可能。
