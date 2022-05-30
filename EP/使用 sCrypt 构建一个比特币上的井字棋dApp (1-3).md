@@ -7,7 +7,7 @@
     * UTXO 模型
     * 比特币脚本语言Script
     * Script与sCrypt
-* 获取、检查 Sighash 原像
+* Sighash 原像
     * 什么是 Sighash 原像
     * 如何获取 Sighash 原像
     * 如何检查 Sighash 原像
@@ -30,11 +30,12 @@
 
 ![](https://github.com/sCrypt-Inc/image-hosting/blob/master/learn-scrypt-courses/01.png?raw=true)
 
-## 获取 Sighash 原像
+## Sighash 原像
 
 ### 1. 什么是 Sighash 原像
 在为比特币中的消息生成签名时，首先对消息生成哈希摘要，然后对摘要进行签名。 一个交易用于生成哈希摘要的消息称为其 sighash 原像。它大致由包含当前交易和它花费的 UTXO 。 在下面的示例中，tx1 中第一个输入的 sighash 原像用红色圈出。 请注意，不同的输入具有不同的 sighash 原像，即使它们在同一笔交易中，因为它们使用不同的 UTXO。
 
+![](https://github.com/sCrypt-Inc/image-hosting/blob/master/learn-scrypt-courses/05.png?raw=true)
 
 [sighash 原像的详细格式](https://github.com/bitcoin-sv/bitcoin-sv/blob/master/doc/abc/replay-protected-sighash.md#digest-algorithm) 如下:
 
