@@ -18,7 +18,7 @@
 
 使用装饰器 @state 声明状态属性。
 
-```
+```js
 contract Counter {
 
     @state
@@ -34,6 +34,7 @@ contract Counter {
 
 您可以将状态属性当作普通属性：读取和更新它。调用编译器为每个合约自动生成的内置函数 this.getStateScript()，可以将状态属性序列化到锁定脚本中。
 
+```js
 contract Counter {
 
     @state
@@ -47,6 +48,7 @@ contract Counter {
         bytes outputScript = this.getStateScript();
     }
 }
+```
 
 ## 第三步： 保存状态属性
 
@@ -75,8 +77,7 @@ contract Counter {
 
 TicTacToe 合约的包含两个状态属性 board 和 isAliceTurn，合约在 move() 方法执行的时候更新并保存这两个状态。
 
-
-```
+```js
 contract TicTacToe {
     PubKey alice;
     PubKey bob;
@@ -95,6 +96,7 @@ contract TicTacToe {
     static const int ALICE = 1;
     static const int BOB = 2;
 
+    
     public function move(int n, Sig sig, int amount, SigHashPreimage txPreimage) {
         require(Tx.checkPreimage(txPreimage));
         require(n >= 0 && n < N);
@@ -105,20 +107,46 @@ contract TicTacToe {
         int play = this.isAliceTurn ? ALICE : BOB;
         PubKey player = this.isAliceTurn ? this.alice : this.bob;
 
+
         // update state properties to make the move
         this.board[n] = play;
         this.isAliceTurn = !this.isAliceTurn;
 
         bytes outputs = b'';
-        。。。
-        // serialize the state of the contract
-        bytes outputScript = this.getStateScript();
-        bytes output = Utils.buildOutput(outputScript, amount);
-        outputs = output;
-        。。。
+        if (this.won(play)) {
+            bytes outputScript = Utils.buildPublicKeyHashScript(hash160(player));
+            bytes output = Utils.buildOutput(outputScript, amount);
+            outputs = output;
+        }
+        else if (this.full()) {
+            bytes aliceScript = Utils.buildPublicKeyHashScript(hash160(this.alice));
+            bytes aliceOutput = Utils.buildOutput(aliceScript, amount);
+
+            bytes bobScript = Utils.buildPublicKeyHashScript(hash160(this.bob));
+            bytes bobOutput = Utils.buildOutput(bobScript, amount);
+
+            outputs = aliceOutput + bobOutput;
+        }
+        else {
+            // serialize the state of the contract
+            bytes outputScript = this.getStateScript();
+            bytes output = Utils.buildOutput(outputScript, amount);
+            outputs = output;
+        }
+
         // make sure the transaction contains the expected outputs
         require(hash256(outputs) == SigHash.hashOutputs(txPreimage));
 
+    }
+
+
+    function won(int play) : bool {
+        return true;
+    }
+
+
+    function full() : bool {
+        return true;
     }
 }
 ```
