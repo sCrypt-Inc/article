@@ -22,6 +22,8 @@
 
 比特币被“锁”在交易的输出中。要想在另一个交易中花费它，其输入中必须含有匹配的“钥匙”。只有钥匙能打开锁时，比特币才能被转移到新的输出中。这就是所谓的 UTXO（Unspent Transaction Outputs） 模型。如下图所示，两个交易各有一个输入和输出。右边的交易输入花费左边交易的输出。
 
+![](https://github.com/sCrypt-Inc/image-hosting/blob/master/learn-scrypt-courses/02.png?raw=true)
+
 ### 比特币脚本语言Script
 
 锁和钥匙都是用比特币脚本语言Script表示。它是比特币虚拟机的指令集，是一种类似于汇编的低级语言。锁和钥匙对应的比特币脚本分别被称为锁定脚本和解锁脚本。输出由两部分组成：锁定脚本和以 satoshis 表示的比特币数量。
@@ -30,6 +32,7 @@
 
 使用汇编进行编程并不是现代软件开发的主流。sCrypt是一种高级语言，编译生成类似汇编的比特币脚本Script。两者的关系类似于Java和Java虚拟机的字节码。这样可以提高开发效率，并使编写的合约变得可测试，提升可靠性。具体来说，sCrypt里公共函数的参数对应解锁脚本，公共函数的函数体对应锁定脚本，如下图所示。
 
+![](https://github.com/sCrypt-Inc/image-hosting/blob/master/learn-scrypt-courses/01.png?raw=true)
 
 ## 获取 Sighash 原像
 
@@ -106,6 +109,8 @@ contract TicTacToe {
 ## 维护游戏状态
 
 合约可以通过将其状态存储在锁定脚本中来实现链式保持状态。 在下面的例子中，合约从 state0 转换到 state1，然后到再转换到 state2。
+
+![](https://github.com/sCrypt-Inc/image-hosting/blob/master/learn-scrypt-courses/06.png?raw=true)
 
 下面以一个简单的计数器合约，展示如何通过简单的步骤在合约中维护状态。
 
