@@ -79,7 +79,7 @@ sCrypt 是强类型语言。TicTacToe 合约将会用到的基本数据类型包
 
 5. Sig：签名
 
-如果你想了解更多的基本类型，可以查看语言[参考文档](https://scryptdoc.readthedocs.io/zh_CN/latest/) 
+如果你想了解更多的基本类型，可以查看[语言参考文档](https://scryptdoc.readthedocs.io/zh_CN/latest/) 
 
 ## 属性
 
@@ -113,7 +113,7 @@ contract TicTacToe {
 
 ## Const 变量
 
-使用 const 关键字的修饰局的变量一旦初始化就不能更改。
+使用 const 关键字的修饰的变量一旦初始化就不能更改。
 
 可以同时使用两者来声明属性。 这通常用于定义常量。
 
