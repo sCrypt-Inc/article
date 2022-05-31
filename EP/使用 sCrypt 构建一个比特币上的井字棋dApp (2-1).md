@@ -158,20 +158,13 @@ yarn add scryptlib
 
 > 操作安装 scryptlib
 
-### web3 工具类
-
-这里我们为你提供了 [web3](https://github.com/sCrypt-Inc/tic-tac-toe/blob/7ae1eb8cb46bd8315d9c7d858b6a190ba3c4c306/src/web3/web3.ts) 工具类。该工具类提供了一组进行网络交互的工具函数，以及对钱包接口的封装。你可以直接使用 `web3.loadContract()` 从网络中加载合约描述文件。
-
 ## 动手环节
 
-接下来同学跟着我一起来完成动手环节。每个小节的动手环节下面都有个 commit。代表该小节需要修改的内容。本节课的动手环节包含两个部分。
+接下来同学跟着我一起来完成动手环节。每个小节的动手环节下面都有个 commit。代表该小节需要修改的内容。本小节的动手环节任务是编译合约，将得到的合约描述文件放到 `public` 目录。
 
-* 编译合约
-* 加载合约描述文件
-
-参考这个 [commit](https://github.com/sCrypt-Inc/tic-tac-toe/commit/5cf4afb31925d141c201d28355ac7ab7597eb1d7)
+参考这个 [commit](https://github.com/sCrypt-Inc/tic-tac-toe/commit/f9c1f5b6fa096af54639bb5ab09f7f83662d710f)
 
 # 总结
 
-这节课我们学习了编译合约、合约描述文件和 scryptlib。在动手环节完成了在前端页面加载合约描述文件。
+这节课我们学习了编译合约、合约描述文件和 scryptlib。在动手环节完成了编译合约。
 
