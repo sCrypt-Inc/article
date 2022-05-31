@@ -156,8 +156,6 @@ npm install scryptlib
 yarn add scryptlib
 ```
 
-> 操作安装 scryptlib
-
 ## 动手环节
 
 接下来同学跟着我一起来完成动手环节。每个小节的动手环节下面都有个 commit。代表该小节需要修改的内容。本小节的动手环节任务是编译合约，将得到的合约描述文件放到 `public` 目录。
