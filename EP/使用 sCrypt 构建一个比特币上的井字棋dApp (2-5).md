@@ -33,6 +33,7 @@
 1. 添加调用合约的代码。为每个下棋动作绑定一次合约调用。
 2. 在将调用合约的交易发送到区块链网络之前，我们通常可以现在本地验证我们构建的交易是否有效。这个可以使用 scryptlib 提供的 verify 方法。
 
+参照 [commit](https://github.com/sCrypt-Inc/tic-tac-toe/commit/dd86f0270b2ea702d17137692be3bc66b291eeaf)
 
 至此，我们完成了 TicTacToe合约与 webapp 的交互，玩家的每个下棋动作，都产生一个区块链上的交易与之对应。
 
