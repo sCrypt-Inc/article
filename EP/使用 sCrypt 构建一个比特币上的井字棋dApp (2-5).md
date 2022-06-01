@@ -31,7 +31,7 @@
 ## 动手环节
 
 1. 添加调用合约的代码。为每个下棋动作绑定一次合约调用。
-2. 在将调用合约的交易发送到区块链网络之前，我们通常可以现在本地验证我们构建的交易是否有效。这个可以使用 scryptlib 提供的 verify 方法。
+2. 在将调用合约的交易发送到BSV网络之前，我们通常可以先在本地验证合约能否成功解锁。这个可以使用 scryptlib 提供的 `verify()` 方法。
 
 参照 [commit](https://github.com/sCrypt-Inc/tic-tac-toe/commit/dd86f0270b2ea702d17137692be3bc66b291eeaf)
 
