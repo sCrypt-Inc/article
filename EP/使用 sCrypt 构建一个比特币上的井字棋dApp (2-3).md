@@ -20,6 +20,8 @@
 BSV 区块链有很多钱包支持进行合约开发，包括[sensilet](https://sensilet.com/)、[dotwallet](https://www.dotwallet.com/en) 和 [volt](https://volt.id)。
 本小节我们以sensilet为例，演示如何集成钱包。
 
+安装 sensilet 后，在设置中切换网络到测试网。然后到 [sCrypt 官网](https://scrypt.io) 领取测试网 BSV。
+
 ## 钱包接口
 
 我们在 [wallet.ts](https://github.com/sCrypt-Inc/tic-tac-toe/blob/webapp/src/web3/wallet.ts) 中定义了一些通用的钱包接口。并使用 sensilet 来实现这些接口。具体实现见: [sensiletwallet.ts](https://github.com/sCrypt-Inc/tic-tac-toe/blob/webapp/src/web3/sensiletwallet.ts)
