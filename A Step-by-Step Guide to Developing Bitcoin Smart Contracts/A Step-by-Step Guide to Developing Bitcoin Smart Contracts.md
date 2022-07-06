@@ -91,9 +91,9 @@ The main body of the contract includes:
 1. A contract variable pubKeyHash of type `PubKeyHash`, corresponding to the previous P2PKH locking script `<Public Key Hash>` ;
 
 
-Constructor `constructor`, used to initialize the contract variable;
+2. Constructor `constructor`, used to initialize the contract variable;
 
-A custom public function named unlock which has two parameter with type Sig and PubKey, corresponding to the previous P2PKH unlocking script `<Signature> <Public Key>`.The implementation logic also corresponds to the P2PKH validation described earlier.
+3. A custom public function named unlock which has two parameter with type Sig and PubKey, corresponding to the previous P2PKH unlocking script `<Signature> <Public Key>`.The implementation logic also corresponds to the P2PKH validation described earlier.
 
 It is obvious that the sCrypt implementation is much easier to learn and write than previous scripts. And the more complex the contractual logic, the more obvious the advantage of using sCrypt is.
 
