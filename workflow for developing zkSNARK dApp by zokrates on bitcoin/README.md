@@ -60,7 +60,7 @@ zokrates generate-proof
 zokrates export-verifier-scrypt
 ```
 
-7. 使用第六步导出的 `verifier.js` 在本地执行对证明的验证。如果本地验证成功，则会将 `verifier.scrypt` 验证者合约部署到测试网(需要填写测试网私钥)，并调用部署的验证者合约
+7. 执行 `verifier.js` 验证 zkSNARK 证明<sup>1</sup>。如果本地验证成功，则会将 `verifier.scrypt` 验证者合约部署到测试网<sup>2</sup>，并调用部署的验证者合约
 
 ```
 node --max-old-space-size=8192 verifier.js
@@ -68,3 +68,6 @@ node --max-old-space-size=8192 verifier.js
 
 ------------------------
 
+- [1] 在此之前，你需要确保安装了 `scryptlib` 和 `axios` *nodejs* 模块。 由于验证者合约较大，增加 `--max-old-space-size=8192` 确保 *nodejs* 内存充足
+
+- [2] 需要填写测试网私钥
