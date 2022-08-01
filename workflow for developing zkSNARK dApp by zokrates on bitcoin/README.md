@@ -1,26 +1,27 @@
-# 比特币上基于 zokrates 的 zkSNARK 应用开发流程简介
+# 使用 Zokrates 在比特币上创建您的第一个 zkSNARK 证明
 
 
-我们展示了[如何使用 zk-SNARKs 来开发比特币的信息不完整的游戏](https://xiaohuiliu.medium.com/incomplete-information-games-on-bitcoin-d79408050882)。
-
-
-众所周知，[ZoKrates](https://github.com/Zokrates/ZoKrates) 是 zkSNARKs 的工具箱。它可以帮助您在 DApp 中使用可验证的计算，从规范的基于高级语言的程序电路到生成计算证明，再到验证这些证明。
-
-
-在 [ZoKrates Fork 库](https://github.com/sCrypt-Inc/zokrates) 中，我们扩展了 ZoKrates 的功能。使其支持自动生成验证 zk-SNARKs 证明的sCrypt智能合约。
-
+这个 [ZoKrates](https://github.com/Zokrates/ZoKrates) [Fork库](https://github.com/sCrypt-Inc/zokrates)  是比特币上 zkSNARKs 的工具箱。它可以帮助您在应用程序中使用可验证的计算，从高级语言的编写的电路到生成计算证明，再到在 sCrypt 中验证这些证明。
 
 ## 安装
 
 下载并使用我们发布的二进制包:
 
-https://github.com/sCrypt-Inc/zokrates/releases/tag/v0.8.1
+https://github.com/sCrypt-Inc/zokrates/releases/latest
 
-## 开发流程
+或者从源码编译：
 
-开发流程基本与原生的 ZoKrates 相同。在验证证明阶段会有不同。
+```bash
+git clone https://github.com/sCrypt/ZoKrates
+./build_release.sh
+cd target/release
+```
 
-1. 编写电路程序，创建文本文件 `root.zok` 并实现一下的程序。在这个例子中，我们将证明知道数字 `b` 的平方根为 `a` ：
+## 工作流程
+
+整个工作流程与原始 ZoKrates 相同，除了验证部分。
+
+1. 编写电路程序，创建文本文件 `root.zok` 并实现以下的程序。在这个例子中，我们将证明知道数字 `b` 的平方根为 `a` ：
 
 ```
 def main(private field a, field b) {
@@ -65,7 +66,5 @@ zokrates export-verifier-scrypt
 node --max-old-space-size=8192 verifier.js
 ```
 
-如果验证失败，则用 [sCrypt IDE](https://marketplace.visualstudio.com/items?itemName=bsv-scrypt.sCrypt) 调试合约。
-
-
+------------------------
 
