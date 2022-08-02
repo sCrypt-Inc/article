@@ -12,7 +12,7 @@ https://github.com/sCrypt-Inc/zokrates/releases/latest
 或者从源码编译：
 
 ```bash
-git clone https://github.com/sCrypt/ZoKrates
+git clone https://github.com/sCrypt-Inc/ZoKrates
 ./build_release.sh
 cd target/release
 ```
