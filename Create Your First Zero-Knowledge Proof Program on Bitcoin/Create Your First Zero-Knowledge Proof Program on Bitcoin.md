@@ -16,12 +16,12 @@
 
 下载并使用我们发布的二进制包:
 
-二进制文件可以从我们的[发布页面](https://github.com/sCrypt-Inc/zokrates/releases/latest)下载。
+二进制文件可以从我们的 [发布页面](https://github.com/sCrypt-Inc/zokrates/releases/latest) 下载。
 
 **编译源码安装**
 
 ```bash
-git clone -b main https://github.com/sCrypt/ZoKrates
+git clone -b main https://github.com/sCrypt-Inc/ZoKrates
 ./build_release.sh
 cd target/release
 ```
