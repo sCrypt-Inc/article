@@ -54,7 +54,7 @@ txid 是红框部分，前缀/后缀分别是它之前/之后的所有内容。
 ![](./transation.jpeg)
 <center><a href="https://leftasexercise.com/2018/03/11/transactions-in-the-bitcoin-network/">一个交易的结构</a> </center>
 
-我们现在可以通过验证单个简短证明来证明交易从给定交易下降，而不管交易链的长度如何，而无需一直追溯。
+不管交易链的长度如何，我们现在可以通过验证单个简短证明来证明交易源于给定交易，而无需一直追溯。
 
 ## 一个简单的 NFT 代币协议
 
@@ -154,6 +154,6 @@ let ok = await verify(prevProof, verificationKey);
 
 [2] 在更一般的形式中，交易形成有向无环图 (DAG)，使得解决 B2G 的计算更加密集。
 
-[3] 这可以在智能合约或 SNARKs 电路中强制执行，或两者兼而有之。在前者中，我们可以使用 [OP_PUSH_TX](https://blog.csdn.net/freedomhero/article/details/107306604) 技术来限制从创世交易下降的所有交易中的输入和输出数量。例如，我们可以强制任何 NFT 交易有两个输入和一个输出。第二个输入包括交易费用。
+[3] 这可以在智能合约或 SNARKs 电路中强制执行，或两者兼而有之。在前者中，我们可以使用 [OP_PUSH_TX](https://blog.csdn.net/freedomhero/article/details/107306604) 技术来限制从创世交易派生的所有交易中的输入和输出数量。例如，我们可以强制任何 NFT 交易有两个输入和一个输出。第二个输入包括交易费用。
 
 [4] 可选地，证明的验证可以在链上完成。它只需要实现[snarkyjs证明系统](https://o1-labs.github.io/proof-systems/)中的验证器，类似于我们已经实现的[Groth16验证器](https://blog.csdn.net/freedomhero/article/details/125599764)。
