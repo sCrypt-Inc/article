@@ -21,7 +21,7 @@ Rule 110 元胞自动机是一维基本 CA，其中 0 和 1 的线性模式根�
 
 ## 实现
 
-类似实施康威生命游戏，我们已经实施了规则 110。
+类似实现[康威生命游戏](https://blog.csdn.net/freedomhero/article/details/111152834)，我们已经实施了规则 110。
 
 ```javascript
 contract rule110 {
