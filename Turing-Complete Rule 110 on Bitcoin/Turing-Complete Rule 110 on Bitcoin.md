@@ -24,25 +24,18 @@ Rule 110 元胞自动机是一维基本 CA，其中 0 和 1 的线性模式根�
 类似实施康威生命游戏，我们已经实施了规则 110。
 
 ```javascript
-
 contract rule110 {
     static const int N = 5; //size of board
     static const int N2 = 3; //size of board
     static bytes LIVE = b'01';
     static bytes DEAD = b'00';
 
+    @state
+    bytes board;
+    
     public function play(int amount, SigHashPreimage txPreimage) {
-        require(Tx.checkPreimage(txPreimage));
-        bytes scriptCode = Util.scriptCode(txPreimage);
-        int scriptLen = len(scriptCode);
-
-        bytes board = scriptCode[scriptLen - N :];
-        bytes newBoard = this.computeNewBoard(board);
-
-        bytes newScriptCode = scriptCode[: scriptLen - N] + newBoard;
-        bytes output = Util.buildOutput(newScriptCode, amount);
-
-        require(hash256(output) == Util.hashOutputs(txPreimage));
+        this.board = this.computeNewBoard(this.board);
+        require(this.propagateState(txPreimage, amount));
     }
 
     function computeNewBoard(bytes board) : bytes {
@@ -58,7 +51,7 @@ contract rule110 {
     function newState(bytes arg) : bytes {
         /*
           Current pattern	        111	110	101	100	011	010	001	000
-          New state for center cell	 0	 1	 1	 0	 1	 1	 1	 0
+          New state for center cell	 0	 1	 1	0	 1	 1	 1	 0
         */
         bytes a = arg[0 : 1];
         bytes b = arg[1 : 2];
@@ -74,6 +67,15 @@ contract rule110 {
             res = DEAD;
         }
         return res;
+    }
+
+    function propagateState(SigHashPreimage txPreimage, int value) : bool {
+        SigHashType sigHashType = SigHash.ANYONECANPAY | SigHash.SINGLE | SigHash.FORKID;
+        // this ensures the preimage is for the current tx
+        require(Tx.checkPreimageSigHashType(txPreimage, sigHashType));
+        bytes outputScript = this.getStateScript();
+        bytes output = Utils.buildOutput(outputScript, value);
+        return hash256(output) == SigHash.hashOutputs(txPreimage);
     }
 }
 
