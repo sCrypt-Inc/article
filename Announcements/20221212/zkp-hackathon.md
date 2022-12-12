@@ -11,4 +11,4 @@
 7. [牛牛扑克](https://devpost.com/software/niu-niu-poker-game): 是一款由 BSV 区块链支持的牛牛扑克游戏。利用其可信赖和透明的方法以可证明的公平方式进行游戏，让玩家可以放心地享受游戏本身.
 8. [Svscribe](https://devpost.com/software/z-subs): 通过零知识密钥声明证明 (ZKKSP) 证明拥有私钥，使用该技术的认购认证/授权平台。ZKKSP 部分是使用 sCrypt 的 [Zokrates 分支](https://github.com/sCrypt-Inc/zokrates/tree/key-statement-proof)构建的。
 9. [贪吃蛇](https://devpost.com/software/zksnake): 手机上经典贪吃蛇游戏的全新ZKP演绎。蛇试图超越对手，但被毒药杀死，毒药的位置一直保密，直到被揭露。
-10. [ZkBaguette](https://devpost.com/software/zksnake): 一种可以大量减少ZKP合约脚本大小的方法。
+10. [ZkBaguette](https://devpost.com/software/zkbaguette): 一种可以大量减少ZKP合约脚本大小的方法。
