@@ -46,17 +46,17 @@ export type ScriptContext = {
 
 | ScriptContext  | 交易原像 `txPreimage`  |
 | ------------- | ------------- | 
-| nVersion | nVersion of the transaction  |
-| utxo.value | value of the output spent by this input (8-byte little endian)  |
-| utxo.scriptCode | scriptCode of the input (serialized as scripts inside CTxOuts) |
-| utxo.outpoint.txid | prevTx id in 32-byte hash |
-| utxo.outpoint.outputIndex | outputIndex in prevTx |
-| hashPrevouts | `hashPrevouts` is the double SHA256 of the serialization of all input outpoints; |
-| hashSequence | `hashSequence` is the double SHA256 of the serialization of nSequence of all inputs; |
-| nSequence | nSequence of the input  |
-| hashOutputs | `hashOutputs` is the double SHA256 of the serialization of all output amount (8-byte little endian) with scriptPubKey (serialized as scripts inside CTxOuts); |
-| nLocktime| nLocktime of the transaction |
-| sigHashType| sighash type of the signature |
+| nVersion | 交易版本号  |
+| utxo.value | 此输入花费的输出值 |
+| utxo.scriptCode | 输入的 scriptCode（在 CTxOuts 中序列化为脚本） |
+| utxo.outpoint.txid | 输入所在交易的交易 Id |
+| utxo.outpoint.outputIndex | 输入所在交易的输出索引 |
+| hashPrevouts | `hashPrevouts` 是所有输入outpoints序列化的双SHA256 |
+| hashSequence | `hashSequence` 是所有输入的nSequence序列化的双SHA256 |
+| nSequence | 输入的 nSequence |
+| hashOutputs | `hashOutputs` 是用scriptPubKey序列化所有输出量（8字节小端）的双SHA256（在CTxOuts中序列化为脚本） |
+| nLocktime| 交易的nLocktime |
+| sigHashType| 签名的 sighash 类型 |
 
 
 
