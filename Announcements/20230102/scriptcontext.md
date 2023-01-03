@@ -1,4 +1,4 @@
-# 没有交易原像的 OP_PUSH_TX 技术
+# scryptTS 中没有交易原像的 OP_PUSH_TX 技术
 
 使用 [OP_PUSH_TX](https://blog.csdn.net/freedomhero/article/details/107306604) 可以让合约代码访问整个 transaction 数据，包括所有的 inputs 和 outputs。
 从而使得我们能够针对这些数据设置任何约束条件。这为在BSV 网络上运行各种智能合约开辟了无限可能。
