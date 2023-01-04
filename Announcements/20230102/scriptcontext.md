@@ -1,4 +1,14 @@
-# scryptTS 中隐藏了交易原像 OP_PUSH_TX 技术
+# scryptTS 新版本发布
+
+scryptTS新版本发布，主要带来两个新特性。 您需要使用以下版本来体验：
+
+```json
+"dependencies": {
+    "scrypt-ts": "=0.1.5-beta.2"
+},
+```
+
+## 1. scryptTS 中隐藏了交易原像 OP_PUSH_TX 技术
 
 使用 [OP_PUSH_TX](https://blog.csdn.net/freedomhero/article/details/107306604) 可以让合约代码访问整个 transaction 数据，包括所有的 inputs 和 outputs。
 从而使得我们能够针对这些数据设置任何约束条件。这为在BSV 网络上运行各种智能合约开辟了无限可能。
@@ -105,13 +115,11 @@ return new bsv.Transaction().from(utxos)
 ```
 
 
-欢迎尝试使用没有交易原像的 OP_PUSH_TX 技术来编写合约。需要使用最新的 **scryptTS** 版本：
+## 2. 支持在 vscode 编辑器中显示转译错误
 
-```json
-"dependencies": {
-    "scrypt-ts": "=0.1.5-beta.2"
-},
-```
+只需将此文件 [task.json](https://github.com/sCrypt-Inc/scryptTS-examples/blob/master/.vscode/tasks.json) 放在当前项目的 `.vscode` 目录中。 然后运行`Shift+Command+B`（Windows：`Ctrl+Shift+B`，Linux：`Ctrl+Shift+B`），可以看到错误输出：
+
+![](./1.jpg)
 
 
 
