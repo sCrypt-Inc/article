@@ -12,6 +12,8 @@
 
 考虑一个具有三个输入和两个输出的示例交易。
 
+![](https://miro.medium.com/v2/resize:fit:1100/format:webp/0*WHu9loJe9GRDPF3z.png)
+
 
 
 输入中有来自 3 个地址的 6 个聪。 输出包含 5 个聪到 2 个不同的地址。 剩余的 1 satoshi 作为费用支付给矿工。
@@ -28,6 +30,8 @@ Ordinals 使用这些技术将整个 NFT 图像/内容存储在链上。
 
 2021 年的 Taproot 升级完全取消了数据限制，只要它适合一个块。 2017 年的隔离见证（Segwit）软件升级允许存储多达 3MB 的见证数据，“超出”1MB 的块限制。 它们共同为铭文内容提供了高达 4MB 的存储空间。
 铭文存储在操作码 OP_IF 和 OP_ENDIF 之间的“信封”中。 OP_FALSE 在 OP_IF 之前以确保此数据永远不会在脚本执行中实际使用并且不会占用堆栈空间。 没有使用 OP_RETURN，包含铭文的输出是可花费的，因此不可修剪。 以下示例写入文本“Hello, world!”：
+
+![](https://miro.medium.com/v2/resize:fit:1100/format:webp/0*Rlp8s9vRiBLZPH0d.png)
 
 ## BSV 上的序数
 
