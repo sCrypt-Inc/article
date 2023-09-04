@@ -43,9 +43,9 @@
 <Locking Script>
 ```
 
-## 许可序号
+## 许可序数
 
-如今，大多数序号都使用 [Pay To Pubkey Hash (P2PKH)](https://learnmeabitcoin.com/technical/p2pkh) 作为锁定脚本。 当 Alice 想要将序数转移给 Bob 时，她不需要任何第三方的许可。
+如今，大多数序数都使用 [Pay To Pubkey Hash (P2PKH)](https://learnmeabitcoin.com/technical/p2pkh) 作为锁定脚本。 当 Alice 想要将序数转移给 Bob 时，她不需要任何第三方的许可。
 
 在某些情况下，每次转让都必须得到发行人的批准，例如为了遵守法律。 当铸造这样的序数时，我们可以使用以下智能合约。
 
