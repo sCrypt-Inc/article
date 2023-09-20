@@ -17,8 +17,11 @@
 - [使用 Python 模拟蒙提霍尔问题](https://medium.com/swlh/simulate-the-monty-hall-problem-using-python-7b76b943640e)
 
 ![](./2.webp)
+
 <center>展示位置的可能性</center>
+
 ![](./3.webp)
+
 <center>Stay vs. Switch 的可能场景</center>
 
 ## 密码学的门
