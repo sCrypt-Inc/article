@@ -1,4 +1,4 @@
-# 使用合约的链上限价订单
+# 使用契约的链上限价订单
 
 我们开发了链上限价订单。 它基于一种称为[契约](https://fc17.ifca.ai/bitcoin/papers/bitcoin17-final28.pdf)的智能合约，只有在花费输出的交易满足特定条件时才可以花费输出。 为了演示其工作原理，我们实施了以比特币支付的 Ordinals 代币买卖限价订单，无需托管人。 它可以运行在任何比特币协议链上，例如Bitcoin SV和[MVC](https://www.microvisionchain.com/)。
 
