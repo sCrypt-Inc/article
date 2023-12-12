@@ -21,7 +21,7 @@ https://whatsonchain.com/tx/{hash}
 根据插件我们可以看到以下信息：
 
 - **id:** 代币 ID
-- **op：** bsv20 术语中的操作类型
+- **op：** bsv20 协议中的操作类型
 - **amount：** utxo 持有的 bsv20 代币数量
 - **owner：** bsv20 代币所有者
 - **Non-BSV20 input:**: 该输入不包含 BSV20 代币
