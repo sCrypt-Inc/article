@@ -24,6 +24,8 @@ https://whatsonchain.com/tx/{hash}
 - **op：** bsv20 术语中的操作类型
 - **amount：** utxo 持有的 bsv20 代币数量
 - **owner：** bsv20 代币所有者
+- **Non-BSV20 input:**: 该输入不包含 BSV20 代币
+- **Non-BSV20 output:**: 该输出不包含 BSV20 代币
 
 我们还可以看到 bsv20 代币的状态：
 
