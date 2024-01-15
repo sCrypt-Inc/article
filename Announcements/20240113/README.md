@@ -18,8 +18,10 @@
 
 ![](./2.png)
 
-<!-- 
+
 # 查看铭文
 
-铸造成功之后，可以在 [Panda](https://chromewebstore.google.com/detail/panda-wallet/mlbnicldlpdimbjdcncnklfempedeipj) 钱包查看铭文。 -->
+铸造成功之后，可以在 [Panda](https://chromewebstore.google.com/detail/panda-wallet/mlbnicldlpdimbjdcncnklfempedeipj) 钱包查看铭文。
 
+
+![](./3.png)
