@@ -21,6 +21,8 @@ f(x) = s + a₁x + a₂x²
 
 `s` 表示 `y` 轴截距处的密钥值（即 `f(0)`），而 `a₁` 和 `a2` 是随机数。
 
+![](./1.webp)
+
 [图片来源](https://medium.com/numen-cyber-labs/ledger-key-recovery-understanding-the-principles-of-mpc-wallets-dc2eacfd39f3)
 
 <center>(3, 4) 经销商的 SSS，其中 s = f(0)</center>
