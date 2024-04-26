@@ -27,7 +27,7 @@ TSS 包括三个阶段:
 
 ### 1. 密钥生成
 
-使用分布式密钥生成 (DKG) 协议，如我们之前的文章[分布式密钥生成](https://xiaohuiliu.medium.com/distributed-key-generation-3ef41ced01ed)中所述。 共享的秘密是私钥 `sk`，任何一方都不知道。
+使用分布式密钥生成 (DKG) 协议，如我们之前的文章[分布式密钥生成](../Distributed%20Key%20Generation/README.md)中所述。 共享的秘密是私钥 `sk`，任何一方都不知道。
 
 
 假设 DKG 由参与者运行，表示为 `P₁` 到 `Pₙ`，并导致每个用户 `Pᵢ` 收到单独的秘密共享 `skᵢ` 以及用于验证目的的共享公钥 `pk`。
