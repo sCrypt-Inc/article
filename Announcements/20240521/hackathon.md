@@ -2,7 +2,7 @@
 
 获胜者由我们的评委和社区投票共同决定。包括：
 
-1. [Gassed-Up](https://devfolio.co/projects/gassedup-08ec): 一个加油站模拟器，展示了我们如何使用比特币智能合约来优化加油站的成本、信任和客户体验。它解决了用现金或点对点电子现金购买油气的“信任困境”问题。
+1. [Gassed-Up](https://devfolio.co/projects/gassedup-08ec): 一个加油站模拟器，展示了如何使用比特币智能合约来优化加油站的成本、信任和客户体验。它解决了用现金或点对点电子现金购买油气的“信任困境”问题。
 2. [The Bitcoin CPU](https://devfolio.co/projects/the-bitcoin-cpu-cfe7): 使用 sCrypt 实现一个虚拟CPU。该CPU包含有一个堆、一个堆栈和四个寄存器。并使用交易来触发CPU执行指令。
 3. [Satoshi Dragons](https://devfolio.co/projects/satoshi-dragons-08f5): Satoshi Dragons 是一款基于比特币的游戏，其中一组 NFT（即龙）执行智能合约强制交互。 这是通过将 1Sat 代币协议与 sCrypt 智能合约相结合来实现的。
 4. [BlockTrust](https://devfolio.co/projects/blocktrust-32fc): 基于 Bitcoin sv 区块链的区块链房地产管理系统。
